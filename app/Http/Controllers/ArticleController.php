@@ -85,24 +85,70 @@ class ArticleController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q', '');
+        $categorySlug = $request->input('categoria');
+        $dateFrom = $request->input('desde');
+        $dateTo = $request->input('hasta');
+        $sort = $request->input('orden', 'recent');
 
-        $articles = Article::published()
-            ->with(['category', 'author'])
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($subQuery) use ($query) {
-                    $subQuery->where('title', 'like', "%{$query}%")
-                        ->orWhere('excerpt', 'like', "%{$query}%")
-                        ->orWhere('body', 'like', "%{$query}%");
-                });
-            })
-            ->recent()
-            ->paginate(12);
+        $articlesQuery = Article::published()
+            ->with(['category', 'author', 'tags']);
+
+        // Text search
+        if ($query) {
+            $articlesQuery->where(function ($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                    ->orWhere('excerpt', 'like', "%{$query}%")
+                    ->orWhere('body', 'like', "%{$query}%");
+            });
+        }
+
+        // Category filter
+        if ($categorySlug) {
+            $articlesQuery->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        // Date range filter
+        if ($dateFrom) {
+            $articlesQuery->whereDate('published_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $articlesQuery->whereDate('published_at', '<=', $dateTo);
+        }
+
+        // Sorting
+        switch ($sort) {
+            case 'oldest':
+                $articlesQuery->orderBy('published_at', 'asc');
+                break;
+            case 'views':
+                $articlesQuery->orderByDesc('views');
+                break;
+            case 'recent':
+            default:
+                $articlesQuery->orderByDesc('published_at');
+                break;
+        }
+
+        $articles = $articlesQuery->paginate(12);
 
         $categories = Category::where('is_active', true)
             ->orderBy('order')
             ->get();
 
-        return view('article.search', compact('articles', 'query', 'categories'));
+        $selectedCategory = $categorySlug ? $categories->firstWhere('slug', $categorySlug) : null;
+
+        return view('article.search', compact(
+            'articles',
+            'query',
+            'categories',
+            'selectedCategory',
+            'categorySlug',
+            'dateFrom',
+            'dateTo',
+            'sort'
+        ));
     }
 
     public function author(Author $author)

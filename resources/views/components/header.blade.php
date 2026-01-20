@@ -60,12 +60,20 @@
                 <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Radio</a>
             </nav>
 
-            <!-- Search & Mobile Menu -->
+            <!-- Search, Reading List & Mobile Menu -->
             <div class="flex items-center gap-2">
-                <a href="{{ route('search') }}" class="p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors">
+                <a href="{{ route('search') }}" class="p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors" title="Buscar">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
+                </a>
+
+                <!-- Reading List -->
+                <a href="{{ route('reading-list') }}" class="p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors relative" title="Mi lista de lectura">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                    </svg>
+                    <span class="reading-list-counter absolute -top-1 -right-1 w-5 h-5 bg-trama-red text-white text-xs font-bold rounded-full flex items-center justify-center" style="display: none;">0</span>
                 </a>
 
                 <!-- Mobile Menu Button -->
@@ -99,6 +107,12 @@
             <a href="/categoria/cultura" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Cultura</a>
             <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Radio</a>
             <a href="{{ route('search') }}" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Buscar</a>
+            <a href="{{ route('reading-list') }}" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+                Mi lista de lectura
+            </a>
             <div class="pt-4 border-t dark:border-dark-secondary">
                 <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                         class="flex items-center gap-2 px-4 py-2 text-dark-primary dark:text-white w-full hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">

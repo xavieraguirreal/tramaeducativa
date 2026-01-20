@@ -17,4 +17,13 @@ class PageController extends Controller
 
         return view('pages.about', compact('categories', 'authors'));
     }
+
+    public function readingList()
+    {
+        $categories = Category::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        return view('pages.reading-list', compact('categories'));
+    }
 }
