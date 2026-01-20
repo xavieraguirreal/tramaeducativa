@@ -61,6 +61,9 @@
     <!-- Footer -->
     @include('components.footer')
 
+    <!-- Cookie/Privacy Banner -->
+    @include('components.cookie-banner')
+
     <!-- Scroll to Top Button -->
     <button class="scroll-to-top" aria-label="Volver arriba">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -258,4 +258,99 @@
         @apply absolute pointer-events-none;
         animation: confetti-fall 1s ease-out forwards;
     }
+
+    /* ================================
+       PAGINATION
+       ================================ */
+    .pagination-wrapper {
+        @apply flex justify-center;
+    }
+
+    .pagination-wrapper nav {
+        @apply flex items-center gap-1;
+    }
+
+    .pagination-wrapper .page-item {
+        @apply inline-flex;
+    }
+
+    .pagination-wrapper .page-link,
+    .pagination-wrapper span[aria-current="page"] span {
+        @apply min-w-[40px] h-10 px-3 flex items-center justify-center;
+        @apply text-sm font-medium rounded-lg;
+        @apply transition-all duration-200;
+    }
+
+    .pagination-wrapper .page-link {
+        @apply bg-white dark:bg-dark-secondary text-gray-700 dark:text-gray-300;
+        @apply border border-gray-200 dark:border-dark-accent;
+        @apply hover:bg-trama-red hover:text-white hover:border-trama-red;
+        @apply hover:scale-105 hover:shadow-md;
+    }
+
+    .pagination-wrapper span[aria-current="page"] span {
+        @apply bg-trama-red text-white border border-trama-red;
+        @apply shadow-md;
+    }
+
+    .pagination-wrapper .page-link[rel="prev"],
+    .pagination-wrapper .page-link[rel="next"] {
+        @apply px-4;
+    }
+
+    .pagination-wrapper .page-item.disabled .page-link {
+        @apply opacity-50 cursor-not-allowed;
+        @apply hover:bg-white dark:hover:bg-dark-secondary;
+        @apply hover:text-gray-700 dark:hover:text-gray-300;
+        @apply hover:border-gray-200 dark:hover:border-dark-accent;
+        @apply hover:scale-100 hover:shadow-none;
+    }
+
+    /* Tailwind default pagination overrides */
+    nav[role="navigation"] {
+        @apply flex items-center justify-between;
+    }
+
+    nav[role="navigation"] .relative.inline-flex {
+        @apply gap-1;
+    }
+
+    nav[role="navigation"] a,
+    nav[role="navigation"] span {
+        @apply relative inline-flex items-center justify-center;
+        @apply min-w-[40px] h-10 px-3;
+        @apply text-sm font-medium rounded-lg;
+        @apply transition-all duration-200;
+    }
+
+    nav[role="navigation"] a:not([rel]) {
+        @apply bg-white dark:bg-dark-secondary text-gray-700 dark:text-gray-300;
+        @apply border border-gray-200 dark:border-dark-accent;
+        @apply hover:bg-trama-red hover:text-white hover:border-trama-red;
+        @apply hover:scale-105 hover:shadow-md;
+    }
+
+    nav[role="navigation"] span[aria-current="page"] span,
+    nav[role="navigation"] span.bg-white {
+        @apply bg-trama-red text-white border border-trama-red shadow-md;
+    }
+
+    nav[role="navigation"] a[rel="prev"],
+    nav[role="navigation"] a[rel="next"] {
+        @apply bg-white dark:bg-dark-secondary text-gray-700 dark:text-gray-300;
+        @apply border border-gray-200 dark:border-dark-accent;
+        @apply hover:bg-trama-red hover:text-white hover:border-trama-red;
+        @apply hover:scale-105 hover:shadow-md;
+    }
+
+    nav[role="navigation"] span[aria-disabled="true"] span {
+        @apply bg-gray-100 dark:bg-dark-accent text-gray-400 dark:text-gray-600;
+        @apply border border-gray-200 dark:border-dark-accent;
+        @apply cursor-not-allowed;
+    }
+
+    /* Hide "Showing X to Y" text on mobile */
+    nav[role="navigation"] > div:first-child > p {
+        @apply hidden sm:block text-sm text-gray-600 dark:text-gray-400;
+    }
 }

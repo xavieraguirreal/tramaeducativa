@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -49,7 +50,7 @@ class ArticleController extends Controller
         }
 
         $article->incrementViews();
-        $article->load(['category', 'author']);
+        $article->load(['category', 'author', 'tags']);
 
         $relatedArticles = Article::published()
             ->where('category_id', $article->category_id)
@@ -117,5 +118,20 @@ class ArticleController extends Controller
             ->get();
 
         return view('article.author', compact('author', 'articles', 'categories'));
+    }
+
+    public function tag(Tag $tag)
+    {
+        $articles = Article::published()
+            ->whereHas('tags', fn($q) => $q->where('tags.id', $tag->id))
+            ->with(['category', 'author', 'tags'])
+            ->recent()
+            ->paginate(12);
+
+        $categories = Category::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        return view('article.tag', compact('tag', 'articles', 'categories'));
     }
 }
