@@ -51,22 +51,22 @@
 
             <!-- Desktop Navigation -->
             <nav class="hidden lg:flex items-center gap-1">
-                <a href="/" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Inicio</a>
-                <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Locales</a>
-                <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Universidad</a>
-                <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Gremiales</a>
-                <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Politica Educativa</a>
-                <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Cultura</a>
+                <a href="{{ route('home') }}" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Inicio</a>
+                <a href="/categoria/locales" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Locales</a>
+                <a href="/categoria/universidad" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Universidad</a>
+                <a href="/categoria/gremiales" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Gremiales</a>
+                <a href="/categoria/politica-educativa" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Politica Educativa</a>
+                <a href="/categoria/cultura" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Cultura</a>
                 <a href="#" class="px-4 py-2 text-sm font-medium text-dark-primary dark:text-white hover:text-trama-red dark:hover:text-trama-red transition-colors">Radio</a>
             </nav>
 
             <!-- Search & Mobile Menu -->
             <div class="flex items-center gap-2">
-                <button class="p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors">
+                <a href="{{ route('search') }}" class="p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                </button>
+                </a>
 
                 <!-- Mobile Menu Button -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 text-dark-primary dark:text-white hover:text-trama-red transition-colors">
@@ -91,13 +91,14 @@
          x-transition:leave-end="opacity-0 -translate-y-4"
          class="lg:hidden bg-white dark:bg-dark-primary border-t dark:border-dark-secondary">
         <nav class="container-main py-4 space-y-2">
-            <a href="/" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Inicio</a>
-            <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Locales</a>
-            <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Universidad</a>
-            <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Gremiales</a>
-            <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Politica Educativa</a>
-            <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Cultura</a>
+            <a href="{{ route('home') }}" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Inicio</a>
+            <a href="/categoria/locales" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Locales</a>
+            <a href="/categoria/universidad" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Universidad</a>
+            <a href="/categoria/gremiales" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Gremiales</a>
+            <a href="/categoria/politica-educativa" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Politica Educativa</a>
+            <a href="/categoria/cultura" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Cultura</a>
             <a href="#" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Radio</a>
+            <a href="{{ route('search') }}" class="block px-4 py-2 text-dark-primary dark:text-white hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">Buscar</a>
             <div class="pt-4 border-t dark:border-dark-secondary">
                 <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                         class="flex items-center gap-2 px-4 py-2 text-dark-primary dark:text-white w-full hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">
