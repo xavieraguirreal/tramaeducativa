@@ -244,6 +244,55 @@ Alpine.data('bookmark', (article) => ({
     }
 }));
 
+Alpine.data('readingListPage', () => ({
+    items: [],
+
+    init() {
+        this.loadItems();
+    },
+
+    loadItems() {
+        try {
+            this.items = JSON.parse(localStorage.getItem('trama_reading_list')) || [];
+            this.items.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+        } catch {
+            this.items = [];
+        }
+    },
+
+    removeItem(slug) {
+        this.items = this.items.filter(item => item.slug !== slug);
+        localStorage.setItem('trama_reading_list', JSON.stringify(this.items));
+        showToast('Articulo eliminado de tu lista');
+        TramaReadingList.updateCounter();
+    },
+
+    clearAll() {
+        if (confirm('¿Seguro que quieres vaciar toda tu lista de lectura?')) {
+            this.items = [];
+            localStorage.setItem('trama_reading_list', JSON.stringify([]));
+            showToast('Lista de lectura vaciada');
+            TramaReadingList.updateCounter();
+        }
+    },
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'hace un momento';
+        if (diffMins < 60) return `hace ${diffMins} min`;
+        if (diffHours < 24) return `hace ${diffHours}h`;
+        if (diffDays < 7) return `hace ${diffDays} dias`;
+
+        return date.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    }
+}));
+
 // ================================
 // BROKEN IMAGE HANDLER
 // ================================
