@@ -245,13 +245,40 @@ Alpine.data('bookmark', (article) => ({
 }));
 
 // ================================
+// BROKEN IMAGE HANDLER
+// ================================
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop';
+
+function handleBrokenImages() {
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.dataset.fallbackSet) {
+            img.dataset.fallbackSet = 'true';
+            img.addEventListener('error', function() {
+                if (this.src !== FALLBACK_IMAGE) {
+                    this.src = FALLBACK_IMAGE;
+                }
+            });
+            // Check if image is already broken (cached error)
+            if (img.complete && img.naturalHeight === 0 && img.src !== FALLBACK_IMAGE) {
+                img.src = FALLBACK_IMAGE;
+            }
+        }
+    });
+}
+
+// ================================
 // INITIALIZE
 // ================================
 document.addEventListener('DOMContentLoaded', () => {
     initReadingProgress();
     initScrollToTop();
     TramaReadingList.updateCounter();
+    handleBrokenImages();
 });
+
+// Also handle dynamically loaded images
+const observer = new MutationObserver(() => handleBrokenImages());
+observer.observe(document.body, { childList: true, subtree: true });
 
 // Initialize Alpine
 Alpine.start();
