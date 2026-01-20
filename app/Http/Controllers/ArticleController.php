@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -101,5 +102,20 @@ class ArticleController extends Controller
             ->get();
 
         return view('article.search', compact('articles', 'query', 'categories'));
+    }
+
+    public function author(Author $author)
+    {
+        $articles = Article::published()
+            ->where('author_id', $author->id)
+            ->with(['category', 'author'])
+            ->recent()
+            ->paginate(12);
+
+        $categories = Category::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        return view('article.author', compact('author', 'articles', 'categories'));
     }
 }

@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('title', $article->title)
+@section('meta_description', $article->excerpt)
+@section('og_type', 'article')
+@section('og_image', $article->featured_image_url)
+
+@section('meta')
+<meta property="article:published_time" content="{{ $article->published_at->toISOString() }}">
+<meta property="article:author" content="{{ $article->author->name }}">
+<meta property="article:section" content="{{ $article->category->name }}">
+@endsection
 
 @section('content')
 <article class="container-main py-8">
@@ -23,17 +32,17 @@
         </p>
 
         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 pb-6 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center gap-2">
+            <a href="{{ route('author', $article->author) }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <img src="{{ $article->author->avatar_url }}"
                      alt="{{ $article->author->name }}"
                      class="w-10 h-10 rounded-full object-cover">
                 <div>
-                    <span class="font-medium dark:text-white">{{ $article->author->name }}</span>
+                    <span class="font-medium dark:text-white hover:text-trama-red transition-colors">{{ $article->author->name }}</span>
                     @if($article->author->bio)
                     <p class="text-xs text-gray-500">{{ Str::limit($article->author->bio, 50) }}</p>
                     @endif
                 </div>
-            </div>
+            </a>
             <span class="text-gray-300 dark:text-gray-600">|</span>
             <time datetime="{{ $article->published_at->toISOString() }}">
                 {{ $article->published_at->format('d M, Y - H:i') }} hs

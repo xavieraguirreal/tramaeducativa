@@ -20,12 +20,12 @@
             <div>
                 <h4 class="font-heading font-bold mb-4">Secciones</h4>
                 <ul class="space-y-2 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Locales</a></li>
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Universidad</a></li>
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Gremiales</a></li>
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Politica Educativa</a></li>
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Cultura</a></li>
-                    <li><a href="#" class="hover:text-trama-red transition-colors">Ciencia y Tecnologia</a></li>
+                    <li><a href="/categoria/locales" class="hover:text-trama-red transition-colors">Locales</a></li>
+                    <li><a href="/categoria/universidad" class="hover:text-trama-red transition-colors">Universidad</a></li>
+                    <li><a href="/categoria/gremiales" class="hover:text-trama-red transition-colors">Gremiales</a></li>
+                    <li><a href="/categoria/politica-educativa" class="hover:text-trama-red transition-colors">Politica Educativa</a></li>
+                    <li><a href="/categoria/cultura" class="hover:text-trama-red transition-colors">Cultura</a></li>
+                    <li><a href="/categoria/ciencia-tecnologia" class="hover:text-trama-red transition-colors">Ciencia y Tecnologia</a></li>
                 </ul>
             </div>
 
@@ -88,9 +88,8 @@
         <div class="container-main py-4 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
             <p>&copy; {{ date('Y') }} Trama Educativa - Cooperativa de Trabajo Minga Ltda.</p>
             <div class="flex gap-4">
-                <a href="#" class="hover:text-trama-red transition-colors">Quienes Somos</a>
-                <a href="#" class="hover:text-trama-red transition-colors">Contacto</a>
-                <a href="#" class="hover:text-trama-red transition-colors">Politica de Privacidad</a>
+                <a href="{{ route('about') }}" class="hover:text-trama-red transition-colors">Quienes Somos</a>
+                <a href="mailto:tramaeducativaradio@gmail.com" class="hover:text-trama-red transition-colors">Contacto</a>
             </div>
         </div>
     </div>
