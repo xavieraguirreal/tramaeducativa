@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Inicio') - Trama Educativa</title>
-    <meta name="description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la region. Cobertura de politica educativa, gremiales, universidad y cultura.')">
-    <meta name="keywords" content="educacion, noticias, mar del plata, docentes, universidad, gremiales, politica educativa">
+    <meta name="description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la región. Cobertura de política educativa, gremiales, universidad y cultura.')">
+    <meta name="keywords" content="educación, noticias, mar del plata, docentes, universidad, gremiales, política educativa">
     <meta name="author" content="Cooperativa de Trabajo Minga Ltda">
     <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="{{ url()->current() }}">
@@ -16,7 +16,7 @@
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'Inicio') - Trama Educativa">
-    <meta property="og:description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la region.')">
+    <meta property="og:description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la región.')">
     <meta property="og:image" content="@yield('og_image', asset('images/og-default.jpg'))">
     <meta property="og:site_name" content="Trama Educativa">
     <meta property="og:locale" content="es_AR">
@@ -25,7 +25,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@TramaEducativa">
     <meta name="twitter:title" content="@yield('title', 'Inicio') - Trama Educativa">
-    <meta name="twitter:description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la region.')">
+    <meta name="twitter:description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la región.')">
     <meta name="twitter:image" content="@yield('og_image', asset('images/og-default.jpg'))">
 
     <!-- Additional meta tags from views -->
