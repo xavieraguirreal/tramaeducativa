@@ -152,26 +152,23 @@
     <!-- AI Summary -->
     @if($article->ai_summary)
     <div class="max-w-4xl mx-auto mb-8">
-        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800">
-            <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                </div>
-                <h3 class="font-heading font-bold text-gray-800 dark:text-white">Resumen IA</h3>
-                <span class="text-xs bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full">Beta</span>
-            </div>
-            <div class="text-gray-700 dark:text-gray-300 space-y-1 text-sm leading-relaxed">
+        <div class="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-800/50 dark:to-gray-800/50 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 class="font-heading font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-trama-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Puntos clave
+            </h3>
+            <ul class="space-y-2">
                 @foreach(explode("\n", $article->ai_summary) as $line)
                     @if(trim($line))
-                    <p class="flex items-start gap-2">
-                        <span class="text-blue-500 mt-0.5">{{ Str::startsWith(trim($line), '•') ? '' : '•' }}</span>
-                        <span>{{ trim(Str::replaceFirst('•', '', $line)) }}</span>
-                    </p>
+                    <li class="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-trama-red mt-2 flex-shrink-0"></span>
+                        <span>{{ trim(str_replace(['•', '-'], '', $line)) }}</span>
+                    </li>
                     @endif
                 @endforeach
-            </div>
+            </ul>
         </div>
     </div>
     @endif
