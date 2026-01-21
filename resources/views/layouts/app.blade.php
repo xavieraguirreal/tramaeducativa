@@ -9,7 +9,7 @@
     <meta name="description" content="@yield('meta_description', 'Portal de noticias educativas de Mar del Plata y la region. Cobertura de politica educativa, gremiales, universidad y cultura.')">
     <meta name="keywords" content="educacion, noticias, mar del plata, docentes, universidad, gremiales, politica educativa">
     <meta name="author" content="Cooperativa de Trabajo Minga Ltda">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph / Facebook -->
@@ -32,6 +32,7 @@
     @yield('meta')
 
     <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
