@@ -145,6 +145,22 @@ Los siguientes módulos están disponibles para implementación futura según ne
 - Feed RSS de podcasts
 - **IA Opcional**: Transcripción automática de podcasts
 
+### Gestión de Publicidad (Google AdSense)
+- Panel para gestionar espacios publicitarios sin tocar código
+- Ubicaciones predefinidas:
+  - `ad-home-top`: Banner horizontal en home (después del bento grid)
+  - `ad-home-middle`: Banner horizontal entre secciones
+  - `ad-sidebar-1`: Cuadrado en sidebar
+  - `ad-article-bottom`: Después del contenido del artículo
+  - `ad-article-related`: Antes de artículos relacionados
+- Configuración por ubicación:
+  - Activar/desactivar cada espacio
+  - Código AdSense personalizado
+  - Tipo de anuncio (horizontal, vertical, cuadrado, responsive)
+- Soporte para múltiples proveedores (AdSense, banners propios, HTML personalizado)
+- Estadísticas de impresiones (opcional)
+- Programar activación/desactivación de anuncios
+
 ---
 
 ## Funcionalidades IA (Opcionales - VERUMax IA)
@@ -206,7 +222,8 @@ Módulos Opcionales - SOLO MENCIÓN
 ├── Configuración del Sitio
 ├── Interacción y Comentarios
 ├── Estadísticas y Analytics
-└── Radio Trama
+├── Radio Trama
+└── Gestión de Publicidad (AdSense)
 ```
 
 ---
