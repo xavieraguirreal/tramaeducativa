@@ -209,12 +209,23 @@
 
             @if($displayArticles->count() > 0)
             <div class="space-y-4 stagger-fade-in">
-                @foreach($displayArticles as $article)
+                @foreach($displayArticles as $item)
+                @php
+                    // Si es búsqueda semántica, $item tiene 'article' y 'similarity_percent'
+                    // Si es búsqueda normal, $item es el artículo directamente
+                    $article = isset($item['article']) ? $item['article'] : $item;
+                    $similarity = isset($item['similarity_percent']) ? $item['similarity_percent'] : null;
+                @endphp
                 <article class="news-card p-4 flex gap-4 group hover:shadow-lg transition-all duration-300">
-                    <a href="{{ route('article.show', $article) }}" class="flex-shrink-0 overflow-hidden rounded-lg">
+                    <a href="{{ route('article.show', $article) }}" class="flex-shrink-0 overflow-hidden rounded-lg relative">
                         <img src="{{ $article->featured_image_url }}"
                              alt="{{ $article->title }}"
                              class="w-32 h-24 md:w-40 md:h-28 object-cover group-hover:scale-110 transition-transform duration-500">
+                        @if($similarity)
+                        <span class="absolute bottom-1 right-1 bg-purple-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+                            {{ $similarity }}
+                        </span>
+                        @endif
                     </a>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
@@ -225,6 +236,10 @@
                             </a>
                             <span class="text-gray-300">•</span>
                             <time class="text-xs text-gray-500">{{ $article->published_at->format('d/m/Y') }}</time>
+                            @if($similarity)
+                            <span class="text-gray-300">•</span>
+                            <span class="text-xs text-purple-600 dark:text-purple-400 font-medium">{{ $similarity }} coincidencia</span>
+                            @endif
                         </div>
                         <h3 class="font-semibold text-lg dark:text-white leading-tight">
                             <a href="{{ route('article.show', $article) }}" class="hover:text-trama-red transition-colors">

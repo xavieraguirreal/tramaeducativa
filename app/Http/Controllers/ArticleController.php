@@ -105,7 +105,7 @@ class ArticleController extends Controller
             try {
                 $embeddings = app(EmbeddingsService::class);
                 $result = $embeddings->searchArticles($query, 20);
-                $semanticResults = collect($result['results'])->map(fn($r) => $r['article']);
+                $semanticResults = collect($result['results']);
 
                 return view('article.search', compact(
                     'query',
