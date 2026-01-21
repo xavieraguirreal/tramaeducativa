@@ -94,4 +94,51 @@ class Article extends Model
         $words = str_word_count(strip_tags($this->body));
         return max(1, ceil($words / 200));
     }
+
+    /**
+     * Get formatted body with HTML support
+     * Supports: headings, paragraphs, lists, blockquotes, bold, italic, links
+     */
+    public function getFormattedBodyAttribute(): string
+    {
+        $body = $this->body;
+
+        // If body contains HTML tags, sanitize and return
+        if (preg_match('/<[^>]+>/', $body)) {
+            // Allow safe HTML tags
+            $allowed = '<h2><h3><h4><p><br><strong><b><em><i><u><a><ul><ol><li><blockquote><hr><span><div>';
+            $body = strip_tags($body, $allowed);
+
+            // Add IDs to headings for TOC
+            $body = preg_replace_callback(
+                '/<(h[2-4])([^>]*)>([^<]+)<\/\1>/i',
+                function ($matches) {
+                    $tag = $matches[1];
+                    $attrs = $matches[2];
+                    $text = $matches[3];
+                    $id = \Str::slug($text);
+                    // Check if already has id
+                    if (strpos($attrs, 'id=') === false) {
+                        return "<{$tag}{$attrs} id=\"{$id}\">{$text}</{$tag}>";
+                    }
+                    return $matches[0];
+                },
+                $body
+            );
+
+            return $body;
+        }
+
+        // Plain text: convert newlines to paragraphs
+        $paragraphs = preg_split('/\n\s*\n/', trim($body));
+        $html = '';
+        foreach ($paragraphs as $p) {
+            $p = trim($p);
+            if (!empty($p)) {
+                $html .= '<p>' . nl2br(e($p)) . '</p>';
+            }
+        }
+
+        return $html;
+    }
 }

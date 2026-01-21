@@ -144,6 +144,35 @@ html.font-size-xlarge { font-size: 20px !important; }
     }
 
     /* ================================
+       TABLE OF CONTENTS
+       ================================ */
+    .toc-nav {
+        @apply bg-gray-50 dark:bg-dark-secondary rounded-lg p-4;
+        @apply border border-gray-200 dark:border-gray-700;
+    }
+
+    .toc-link {
+        @apply block py-1.5 text-gray-600 dark:text-gray-400;
+        @apply hover:text-trama-red dark:hover:text-trama-red;
+        @apply transition-colors duration-200;
+        @apply border-l-2 border-transparent pl-3 -ml-px;
+    }
+
+    .toc-link.active {
+        @apply text-trama-red dark:text-trama-red font-medium;
+        @apply border-l-2 border-trama-red;
+    }
+
+    /* Prose headings with proper spacing for scroll */
+    .prose h2 {
+        @apply mt-10 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700;
+    }
+
+    .prose h3 {
+        @apply mt-8 mb-3;
+    }
+
+    /* ================================
        SCROLL TO TOP
        ================================ */
     .scroll-to-top {

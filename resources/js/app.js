@@ -522,6 +522,77 @@ Alpine.data('ttsPlayer', () => ({
 }));
 
 // ================================
+// TABLE OF CONTENTS
+// ================================
+Alpine.data('tableOfContents', () => ({
+    headings: [],
+    activeId: '',
+    tocOpen: false,
+
+    init() {
+        this.$nextTick(() => {
+            this.extractHeadings();
+            this.setupScrollSpy();
+        });
+    },
+
+    extractHeadings() {
+        const content = document.getElementById('article-content');
+        if (!content) return;
+
+        const headingElements = content.querySelectorAll('h2, h3');
+        this.headings = Array.from(headingElements).map((el, index) => {
+            // Ensure heading has an ID
+            if (!el.id) {
+                el.id = `heading-${index}`;
+            }
+            return {
+                id: el.id,
+                text: el.textContent.trim(),
+                level: parseInt(el.tagName.charAt(1))
+            };
+        });
+
+        // Set first heading as active
+        if (this.headings.length > 0) {
+            this.activeId = this.headings[0].id;
+        }
+    },
+
+    setupScrollSpy() {
+        if (this.headings.length === 0) return;
+
+        const observerOptions = {
+            rootMargin: '-80px 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.activeId = entry.target.id;
+                }
+            });
+        }, observerOptions);
+
+        this.headings.forEach(heading => {
+            const el = document.getElementById(heading.id);
+            if (el) observer.observe(el);
+        });
+    },
+
+    scrollToHeading(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            const offset = 100;
+            const top = el.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+            this.activeId = id;
+        }
+    }
+}));
+
+// ================================
 // FONT SIZE ACCESSIBILITY
 // ================================
 window.TramaAccessibility = {

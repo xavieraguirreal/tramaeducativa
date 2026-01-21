@@ -216,4 +216,31 @@ La historia de nuestro pais demuestra que los avances sociales siempre estuviero
     {
         return $content;
     }
+
+    /**
+     * Generate article body with HTML headings for TOC
+     */
+    private function generateStructuredBody(string $title, array $sections): string
+    {
+        $html = "<p class=\"lead\">{$sections['intro']}</p>\n\n";
+
+        foreach ($sections['content'] as $section) {
+            $html .= "<h2>{$section['title']}</h2>\n";
+            $html .= "<p>{$section['body']}</p>\n\n";
+
+            if (isset($section['subsections'])) {
+                foreach ($section['subsections'] as $sub) {
+                    $html .= "<h3>{$sub['title']}</h3>\n";
+                    $html .= "<p>{$sub['body']}</p>\n\n";
+                }
+            }
+        }
+
+        if (isset($sections['conclusion'])) {
+            $html .= "<h2>Conclusión</h2>\n";
+            $html .= "<p>{$sections['conclusion']}</p>\n";
+        }
+
+        return $html;
+    }
 }

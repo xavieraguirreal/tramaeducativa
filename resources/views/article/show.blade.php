@@ -111,7 +111,7 @@
     </figure>
 
     <!-- Audio TTS Player -->
-    <div class="max-w-3xl mx-auto mb-6"
+    <div class="max-w-4xl mx-auto mb-6"
          x-data="ttsPlayer()"
          x-init="init()">
         <div class="tts-player">
@@ -128,7 +128,7 @@
             <div class="flex-1">
                 <div class="flex items-center justify-between mb-1">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        <span x-show="!isPlaying && !isPaused">Escuchar articulo</span>
+                        <span x-show="!isPlaying && !isPaused">Escuchar artículo</span>
                         <span x-show="isPlaying">Reproduciendo...</span>
                         <span x-show="isPaused && !isPlaying">Pausado</span>
                     </span>
@@ -149,10 +149,72 @@
         </div>
     </div>
 
-    <!-- Article Body -->
-    <div class="max-w-3xl mx-auto">
-        <div id="article-content" class="prose prose-lg dark:prose-invert max-w-none mb-8">
-            {!! nl2br(e($article->body)) !!}
+    <!-- Article Body with TOC -->
+    <div class="max-w-4xl mx-auto" x-data="tableOfContents()">
+        <div class="lg:flex lg:gap-8">
+            <!-- TOC Sidebar (Desktop) -->
+            <aside class="hidden lg:block lg:w-64 lg:flex-shrink-0">
+                <div class="sticky top-24">
+                    <nav x-show="headings.length > 0" class="toc-nav">
+                        <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                            </svg>
+                            Contenido
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <template x-for="(heading, index) in headings" :key="index">
+                                <li :class="{ 'pl-4': heading.level === 3 }">
+                                    <a :href="'#' + heading.id"
+                                       @click.prevent="scrollToHeading(heading.id)"
+                                       class="toc-link"
+                                       :class="{ 'active': activeId === heading.id }"
+                                       x-text="heading.text">
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- TOC Mobile (Collapsible) -->
+            <div x-show="headings.length > 0" class="lg:hidden mb-6">
+                <div class="bg-gray-50 dark:bg-dark-secondary rounded-lg overflow-hidden">
+                    <button @click="tocOpen = !tocOpen"
+                            class="w-full px-4 py-3 flex items-center justify-between text-left font-medium dark:text-white">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                            </svg>
+                            Contenido del artículo
+                        </span>
+                        <svg class="w-5 h-5 transition-transform" :class="{ 'rotate-180': tocOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="tocOpen" x-collapse>
+                        <ul class="px-4 pb-4 space-y-2 text-sm">
+                            <template x-for="(heading, index) in headings" :key="index">
+                                <li :class="{ 'pl-4': heading.level === 3 }">
+                                    <a :href="'#' + heading.id"
+                                       @click.prevent="scrollToHeading(heading.id); tocOpen = false"
+                                       class="text-gray-600 dark:text-gray-400 hover:text-trama-red dark:hover:text-trama-red transition-colors"
+                                       x-text="heading.text">
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 min-w-0">
+                <div id="article-content" class="prose prose-lg dark:prose-invert max-w-none mb-8 prose-headings:scroll-mt-24">
+                    {!! $article->formatted_body !!}
+                </div>
+            </div>
         </div>
 
         <!-- Tags -->
