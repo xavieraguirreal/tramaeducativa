@@ -123,6 +123,44 @@
                 </div>
             </section>
 
+            <!-- Por Categoría -->
+            @if(!empty($articlesByCategory))
+            @foreach($articlesByCategory as $slug => $data)
+            @if($data['articles']->count() > 0)
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-heading text-xl font-bold dark:text-white flex items-center gap-2">
+                        <span class="w-1 h-6 rounded-full" style="background-color: {{ $data['category']->color }}"></span>
+                        {{ $data['category']->name }}
+                    </h2>
+                    <a href="{{ route('category', $data['category']) }}" class="text-sm font-medium hover:text-trama-red transition-colors" style="color: {{ $data['category']->color }}">
+                        Ver todas →
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    @foreach($data['articles'] as $article)
+                    <article class="news-card overflow-hidden group">
+                        <a href="{{ route('article.show', $article) }}" class="block overflow-hidden">
+                            <img src="{{ $article->featured_image_url }}"
+                                 alt="{{ $article->title }}"
+                                 class="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-500">
+                        </a>
+                        <div class="p-3">
+                            <h3 class="font-semibold text-sm dark:text-white leading-tight line-clamp-2">
+                                <a href="{{ route('article.show', $article) }}" class="hover:text-trama-red transition-colors">
+                                    {{ $article->title }}
+                                </a>
+                            </h3>
+                            <time class="text-xs text-gray-500 mt-1 block">{{ $article->published_at->diffForHumans() }}</time>
+                        </div>
+                    </article>
+                    @endforeach
+                </div>
+            </section>
+            @endif
+            @endforeach
+            @endif
+
             <!-- Categorias Section -->
             <section>
                 <div class="flex items-center justify-between mb-6">

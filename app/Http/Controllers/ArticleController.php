@@ -23,7 +23,7 @@ class ArticleController extends Controller
             ->with(['category', 'author'])
             ->recent()
             ->when($featuredArticle, fn($q) => $q->where('id', '!=', $featuredArticle->id))
-            ->take(6)
+            ->take(12)
             ->get();
 
         $categories = Category::where('is_active', true)
@@ -36,11 +36,26 @@ class ArticleController extends Controller
             ->take(5)
             ->get();
 
+        // Artículos por categoría para sección adicional
+        $articlesByCategory = [];
+        foreach ($categories->take(4) as $category) {
+            $articlesByCategory[$category->slug] = [
+                'category' => $category,
+                'articles' => Article::published()
+                    ->where('category_id', $category->id)
+                    ->with(['author'])
+                    ->recent()
+                    ->take(3)
+                    ->get()
+            ];
+        }
+
         return view('home', compact(
             'featuredArticle',
             'latestArticles',
             'categories',
-            'mostViewed'
+            'mostViewed',
+            'articlesByCategory'
         ));
     }
 
