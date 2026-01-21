@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Author;
 use App\Models\Category;
 
@@ -25,5 +26,18 @@ class PageController extends Controller
             ->get();
 
         return view('pages.reading-list', compact('categories'));
+    }
+
+    public function rss()
+    {
+        $articles = Article::published()
+            ->with(['category', 'author'])
+            ->orderByDesc('published_at')
+            ->take(20)
+            ->get();
+
+        return response()
+            ->view('pages.rss', compact('articles'))
+            ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
     }
 }

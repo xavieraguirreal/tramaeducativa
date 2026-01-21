@@ -31,6 +31,9 @@
     <!-- Additional meta tags from views -->
     @yield('meta')
 
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="Trama Educativa RSS" href="{{ route('rss') }}">
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
