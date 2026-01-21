@@ -21,6 +21,8 @@ class Article extends Model
         'status',
         'is_featured',
         'views',
+        'embedding',
+        'embedding_hash',
         'published_at',
     ];
 

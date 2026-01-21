@@ -15,13 +15,45 @@
         </h1>
 
         <!-- Search Form with Filters -->
-        <form action="{{ route('search') }}" method="GET" class="space-y-4" x-data="{ showFilters: {{ ($categorySlug || $dateFrom || $dateTo || $sort !== 'recent') ? 'true' : 'false' }} }">
+        <form action="{{ route('search') }}" method="GET" class="space-y-4" x-data="{ showFilters: {{ ($categorySlug || $dateFrom || $dateTo || $sort !== 'recent') ? 'true' : 'false' }}, searchType: '{{ $searchType ?? 'text' }}' }">
+            <!-- Search Type Toggle -->
+            <div class="flex items-center gap-4 max-w-3xl">
+                <div class="flex items-center bg-gray-100 dark:bg-dark-accent rounded-lg p-1">
+                    <button type="button"
+                            @click="searchType = 'text'"
+                            :class="searchType === 'text' ? 'bg-white dark:bg-dark-secondary shadow-sm text-trama-red' : 'text-gray-600 dark:text-gray-400'"
+                            class="px-4 py-2 rounded-md text-sm font-medium transition-all">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Texto
+                        </span>
+                    </button>
+                    <button type="button"
+                            @click="searchType = 'semantic'"
+                            :class="searchType === 'semantic' ? 'bg-white dark:bg-dark-secondary shadow-sm text-trama-red' : 'text-gray-600 dark:text-gray-400'"
+                            class="px-4 py-2 rounded-md text-sm font-medium transition-all">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                            IA
+                        </span>
+                    </button>
+                </div>
+                <input type="hidden" name="tipo" :value="searchType">
+                <span x-show="searchType === 'semantic'" class="text-xs text-gray-500 dark:text-gray-400">
+                    Busqueda inteligente con IA
+                </span>
+            </div>
+
             <!-- Main Search Input -->
             <div class="relative max-w-3xl">
                 <input type="text"
                        name="q"
                        value="{{ $query }}"
-                       placeholder="Buscar noticias..."
+                       :placeholder="searchType === 'semantic' ? 'Describe lo que buscas...' : 'Buscar noticias...'"
                        class="w-full px-6 py-4 pr-32 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-secondary text-dark-primary dark:text-white focus:outline-none focus:ring-2 focus:ring-trama-red focus:border-transparent text-lg">
                 <button type="submit"
                         class="absolute right-2 top-1/2 -translate-y-1/2 bg-trama-red text-white px-6 py-2.5 rounded-lg hover:bg-trama-red-dark transition-colors font-medium">
@@ -110,12 +142,31 @@
             </div>
         </form>
 
+        @if(isset($semanticError))
+        <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-yellow-800 dark:text-yellow-200 text-sm">
+            {{ $semanticError }}
+        </div>
+        @endif
+
         <!-- Results Info & Active Filters -->
         @if($query || $categorySlug || $dateFrom || $dateTo)
         <div class="mt-6 flex flex-wrap items-center gap-3">
             <span class="text-gray-600 dark:text-gray-400">
+                @if(isset($semanticResults))
+                {{ $semanticResults->count() }} resultado(s) con IA
+                @else
                 {{ $articles->total() }} resultado(s)
+                @endif
             </span>
+
+            @if(isset($searchType) && $searchType === 'semantic')
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                Busqueda IA
+            </span>
+            @endif
 
             <!-- Active Filter Tags -->
             @if($selectedCategory)
@@ -152,9 +203,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2">
-            @if($articles->count() > 0)
+            @php
+                $displayArticles = isset($semanticResults) ? $semanticResults : (isset($articles) ? $articles : collect());
+            @endphp
+
+            @if($displayArticles->count() > 0)
             <div class="space-y-4 stagger-fade-in">
-                @foreach($articles as $article)
+                @foreach($displayArticles as $article)
                 <article class="news-card p-4 flex gap-4 group hover:shadow-lg transition-all duration-300">
                     <a href="{{ route('article.show', $article) }}" class="flex-shrink-0 overflow-hidden rounded-lg">
                         <img src="{{ $article->featured_image_url }}"
@@ -212,9 +267,11 @@
             </div>
 
             <!-- Pagination -->
+            @if(isset($articles) && !isset($semanticResults))
             <div class="mt-8">
                 {{ $articles->appends(request()->query())->links() }}
             </div>
+            @endif
             @else
             <div class="news-card p-12 text-center">
                 <svg class="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,6 +341,20 @@
                         Ordena por "Mas leidos" para contenido popular
                     </li>
                 </ul>
+
+                <!-- Semantic Search Info -->
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <h4 class="font-semibold text-sm mb-2 dark:text-white flex items-center gap-2">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                        Busqueda con IA
+                    </h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        La busqueda IA entiende el significado de tu consulta, no solo las palabras exactas.
+                        Prueba con frases como "problemas de financiamiento universitario" o "conflictos gremiales docentes".
+                    </p>
+                </div>
             </div>
 
             <!-- Newsletter -->

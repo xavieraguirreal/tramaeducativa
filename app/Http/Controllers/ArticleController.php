@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Services\EmbeddingsService;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -89,11 +90,44 @@ class ArticleController extends Controller
         $dateFrom = $request->input('desde');
         $dateTo = $request->input('hasta');
         $sort = $request->input('orden', 'recent');
+        $searchType = $request->input('tipo', 'text'); // 'text' or 'semantic'
 
+        $categories = Category::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        $selectedCategory = $categorySlug ? $categories->firstWhere('slug', $categorySlug) : null;
+        $semanticResults = null;
+        $semanticError = null;
+
+        // Semantic search
+        if ($searchType === 'semantic' && $query && strlen($query) >= 3) {
+            try {
+                $embeddings = app(EmbeddingsService::class);
+                $result = $embeddings->searchArticles($query, 20);
+                $semanticResults = collect($result['results'])->map(fn($r) => $r['article']);
+
+                return view('article.search', compact(
+                    'query',
+                    'categories',
+                    'selectedCategory',
+                    'categorySlug',
+                    'dateFrom',
+                    'dateTo',
+                    'sort',
+                    'searchType',
+                    'semanticResults'
+                ));
+            } catch (\Exception $e) {
+                $semanticError = 'Error en busqueda semantica. Mostrando resultados de texto.';
+                $searchType = 'text';
+            }
+        }
+
+        // Text search (default)
         $articlesQuery = Article::published()
             ->with(['category', 'author', 'tags']);
 
-        // Text search
         if ($query) {
             $articlesQuery->where(function ($q) use ($query) {
                 $q->where('title', 'like', "%{$query}%")
@@ -102,14 +136,12 @@ class ArticleController extends Controller
             });
         }
 
-        // Category filter
         if ($categorySlug) {
             $articlesQuery->whereHas('category', function ($q) use ($categorySlug) {
                 $q->where('slug', $categorySlug);
             });
         }
 
-        // Date range filter
         if ($dateFrom) {
             $articlesQuery->whereDate('published_at', '>=', $dateFrom);
         }
@@ -117,7 +149,6 @@ class ArticleController extends Controller
             $articlesQuery->whereDate('published_at', '<=', $dateTo);
         }
 
-        // Sorting
         switch ($sort) {
             case 'oldest':
                 $articlesQuery->orderBy('published_at', 'asc');
@@ -133,12 +164,6 @@ class ArticleController extends Controller
 
         $articles = $articlesQuery->paginate(12);
 
-        $categories = Category::where('is_active', true)
-            ->orderBy('order')
-            ->get();
-
-        $selectedCategory = $categorySlug ? $categories->firstWhere('slug', $categorySlug) : null;
-
         return view('article.search', compact(
             'articles',
             'query',
@@ -147,7 +172,9 @@ class ArticleController extends Controller
             'categorySlug',
             'dateFrom',
             'dateTo',
-            'sort'
+            'sort',
+            'searchType',
+            'semanticError'
         ));
     }
 
