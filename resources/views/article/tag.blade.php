@@ -26,7 +26,7 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
             @if($articles->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 stagger-fade-in">
                 @foreach($articles as $article)
                 <article class="news-card overflow-hidden group">
                     <a href="{{ route('article.show', $article) }}">

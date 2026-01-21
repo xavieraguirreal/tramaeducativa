@@ -237,8 +237,114 @@
        ================================ */
     .skeleton {
         @apply bg-gray-200 dark:bg-dark-accent rounded;
-        @apply animate-pulse;
+        background: linear-gradient(90deg,
+            theme('colors.gray.200') 25%,
+            theme('colors.gray.100') 50%,
+            theme('colors.gray.200') 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.5s infinite;
     }
+
+    .dark .skeleton {
+        background: linear-gradient(90deg,
+            theme('colors.dark.accent') 25%,
+            theme('colors.dark.secondary') 50%,
+            theme('colors.dark.accent') 75%
+        );
+        background-size: 200% 100%;
+    }
+
+    @keyframes skeleton-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .skeleton-text {
+        @apply h-4 rounded;
+    }
+
+    .skeleton-text-sm {
+        @apply h-3 rounded;
+    }
+
+    .skeleton-text-lg {
+        @apply h-6 rounded;
+    }
+
+    .skeleton-avatar {
+        @apply rounded-full;
+    }
+
+    .skeleton-image {
+        @apply w-full rounded-lg;
+    }
+
+    .skeleton-card {
+        @apply bg-white dark:bg-dark-secondary rounded-xl overflow-hidden;
+    }
+
+    /* Image skeleton while loading */
+    .img-skeleton {
+        @apply relative overflow-hidden;
+    }
+
+    .img-skeleton::before {
+        content: '';
+        @apply absolute inset-0 z-10;
+        background: linear-gradient(90deg,
+            theme('colors.gray.200') 25%,
+            theme('colors.gray.100') 50%,
+            theme('colors.gray.200') 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.5s infinite;
+    }
+
+    .dark .img-skeleton::before {
+        background: linear-gradient(90deg,
+            theme('colors.dark.accent') 25%,
+            theme('colors.dark.secondary') 50%,
+            theme('colors.dark.accent') 75%
+        );
+        background-size: 200% 100%;
+    }
+
+    .img-skeleton.loaded::before {
+        @apply opacity-0;
+        transition: opacity 0.3s ease-out;
+    }
+
+    /* Page content fade-in */
+    .content-fade-in {
+        animation: contentFadeIn 0.5s ease-out;
+    }
+
+    @keyframes contentFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Staggered animation for grid items */
+    .stagger-fade-in > * {
+        opacity: 0;
+        animation: contentFadeIn 0.4s ease-out forwards;
+    }
+
+    .stagger-fade-in > *:nth-child(1) { animation-delay: 0.05s; }
+    .stagger-fade-in > *:nth-child(2) { animation-delay: 0.1s; }
+    .stagger-fade-in > *:nth-child(3) { animation-delay: 0.15s; }
+    .stagger-fade-in > *:nth-child(4) { animation-delay: 0.2s; }
+    .stagger-fade-in > *:nth-child(5) { animation-delay: 0.25s; }
+    .stagger-fade-in > *:nth-child(6) { animation-delay: 0.3s; }
+    .stagger-fade-in > *:nth-child(7) { animation-delay: 0.35s; }
+    .stagger-fade-in > *:nth-child(8) { animation-delay: 0.4s; }
 
     /* ================================
        CONFETTI ANIMATION

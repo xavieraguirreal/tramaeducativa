@@ -153,7 +153,7 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
             @if($articles->count() > 0)
-            <div class="space-y-4">
+            <div class="space-y-4 stagger-fade-in">
                 @foreach($articles as $article)
                 <article class="news-card p-4 flex gap-4 group hover:shadow-lg transition-all duration-300">
                     <a href="{{ route('article.show', $article) }}" class="flex-shrink-0 overflow-hidden rounded-lg">

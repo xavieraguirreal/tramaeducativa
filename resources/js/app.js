@@ -294,22 +294,45 @@ Alpine.data('readingListPage', () => ({
 }));
 
 // ================================
-// BROKEN IMAGE HANDLER
+// BROKEN IMAGE HANDLER & SKELETON
 // ================================
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop';
 
-function handleBrokenImages() {
+function handleImages() {
     document.querySelectorAll('img').forEach(img => {
-        if (!img.dataset.fallbackSet) {
-            img.dataset.fallbackSet = 'true';
-            img.addEventListener('error', function() {
-                if (this.src !== FALLBACK_IMAGE) {
-                    this.src = FALLBACK_IMAGE;
-                }
-            });
-            // Check if image is already broken (cached error)
-            if (img.complete && img.naturalHeight === 0 && img.src !== FALLBACK_IMAGE) {
+        if (img.dataset.imageHandled) return;
+        img.dataset.imageHandled = 'true';
+
+        // Add skeleton class to parent if it's a card image
+        const parent = img.parentElement;
+        if (parent && (parent.tagName === 'A' || parent.classList.contains('overflow-hidden'))) {
+            parent.classList.add('img-skeleton');
+        }
+
+        // Handle load event
+        img.addEventListener('load', function() {
+            if (parent && parent.classList.contains('img-skeleton')) {
+                parent.classList.add('loaded');
+            }
+        });
+
+        // Handle error event
+        img.addEventListener('error', function() {
+            if (this.src !== FALLBACK_IMAGE) {
+                this.src = FALLBACK_IMAGE;
+            }
+            if (parent && parent.classList.contains('img-skeleton')) {
+                parent.classList.add('loaded');
+            }
+        });
+
+        // Check if already loaded (cached)
+        if (img.complete) {
+            if (img.naturalHeight === 0 && img.src !== FALLBACK_IMAGE) {
                 img.src = FALLBACK_IMAGE;
+            }
+            if (parent && parent.classList.contains('img-skeleton')) {
+                parent.classList.add('loaded');
             }
         }
     });
@@ -322,11 +345,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initReadingProgress();
     initScrollToTop();
     TramaReadingList.updateCounter();
-    handleBrokenImages();
+    handleImages();
 });
 
 // Also handle dynamically loaded images
-const observer = new MutationObserver(() => handleBrokenImages());
+const observer = new MutationObserver(() => handleImages());
 observer.observe(document.body, { childList: true, subtree: true });
 
 // Initialize Alpine

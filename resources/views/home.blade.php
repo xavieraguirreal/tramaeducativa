@@ -6,7 +6,7 @@
 <div class="container-main py-8">
     <!-- Bento Grid Section -->
     <section class="mb-12">
-        <div class="bento-grid">
+        <div class="bento-grid stagger-fade-in">
             <!-- Featured Article (2x2) -->
             @if($featuredArticle)
             <article class="bento-item bento-featured group">
@@ -94,7 +94,7 @@
                         Mas Noticias
                     </h2>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-4 stagger-fade-in">
                     @foreach($latestArticles->skip(5) as $article)
                     <article class="news-card p-4 flex gap-4 group hover:shadow-lg transition-all duration-300">
                         <a href="{{ route('article.show', $article) }}" class="flex-shrink-0 overflow-hidden rounded-lg">
