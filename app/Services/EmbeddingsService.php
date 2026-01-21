@@ -152,6 +152,61 @@ class EmbeddingsService
     }
 
     /**
+     * Encuentra articulos relacionados usando embeddings (sin llamada a API)
+     */
+    public function findRelatedArticles(Article $article, int $limit = 3): array
+    {
+        // Si el articulo no tiene embedding, retornar vacio
+        if (!$article->embedding) {
+            return [];
+        }
+
+        $cacheKey = 'related_articles_' . $article->id;
+        $cached = Cache::get($cacheKey);
+
+        if ($cached) {
+            return $cached;
+        }
+
+        $articleEmbedding = json_decode($article->embedding, true);
+
+        // Obtener otros articulos con embeddings
+        $otherArticles = Article::published()
+            ->where('id', '!=', $article->id)
+            ->whereNotNull('embedding')
+            ->with(['category', 'author'])
+            ->get();
+
+        if ($otherArticles->isEmpty()) {
+            return [];
+        }
+
+        // Calcular similitud
+        $results = [];
+        foreach ($otherArticles as $other) {
+            $otherEmbedding = json_decode($other->embedding, true);
+            $similarity = self::cosineSimilarity($articleEmbedding, $otherEmbedding);
+
+            $results[] = [
+                'article' => $other,
+                'similarity' => $similarity,
+                'similarity_percent' => round($similarity * 100, 1) . '%',
+            ];
+        }
+
+        // Ordenar por similitud
+        usort($results, fn($a, $b) => $b['similarity'] <=> $a['similarity']);
+
+        // Limitar
+        $results = array_slice($results, 0, $limit);
+
+        // Cache por 24 horas
+        Cache::put($cacheKey, $results, 86400);
+
+        return $results;
+    }
+
+    /**
      * Prepara el texto del articulo para embedding
      */
     protected function prepareArticleText(Article $article): string

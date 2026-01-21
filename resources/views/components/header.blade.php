@@ -1,3 +1,6 @@
+<!-- Breaking News Ticker -->
+@include('components.breaking-news-ticker')
+
 <header class="bg-white dark:bg-dark-primary shadow-sm sticky top-0 z-50" x-data="{ mobileMenuOpen: false }">
     <!-- Top Bar -->
     <div class="bg-dark-primary text-white text-sm py-2 hidden md:block">

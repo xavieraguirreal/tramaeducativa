@@ -53,19 +53,39 @@ class ArticleController extends Controller
         $article->incrementViews();
         $article->load(['category', 'author', 'tags']);
 
-        $relatedArticles = Article::published()
-            ->where('category_id', $article->category_id)
-            ->where('id', '!=', $article->id)
-            ->with(['category', 'author'])
-            ->recent()
-            ->take(3)
-            ->get();
+        // Intentar obtener relacionados con IA si tiene embedding
+        $relatedWithAI = false;
+        $relatedArticles = collect();
+
+        if ($article->embedding) {
+            try {
+                $embeddings = app(EmbeddingsService::class);
+                $aiRelated = $embeddings->findRelatedArticles($article, 3);
+                if (!empty($aiRelated)) {
+                    $relatedArticles = collect($aiRelated);
+                    $relatedWithAI = true;
+                }
+            } catch (\Exception $e) {
+                // Si falla, usar metodo tradicional
+            }
+        }
+
+        // Fallback: relacionados por categoria
+        if ($relatedArticles->isEmpty()) {
+            $relatedArticles = Article::published()
+                ->where('category_id', $article->category_id)
+                ->where('id', '!=', $article->id)
+                ->with(['category', 'author'])
+                ->recent()
+                ->take(3)
+                ->get();
+        }
 
         $categories = Category::where('is_active', true)
             ->orderBy('order')
             ->get();
 
-        return view('article.show', compact('article', 'relatedArticles', 'categories'));
+        return view('article.show', compact('article', 'relatedArticles', 'relatedWithAI', 'categories'));
     }
 
     public function category(Category $category)

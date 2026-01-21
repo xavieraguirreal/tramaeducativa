@@ -465,4 +465,85 @@ html.font-size-xlarge { font-size: 20px !important; }
     nav[role="navigation"] > div:first-child > p {
         @apply hidden sm:block text-sm text-gray-600 dark:text-gray-400;
     }
+
+    /* ================================
+       BREAKING NEWS TICKER
+       ================================ */
+    .breaking-news-ticker {
+        @apply relative;
+    }
+
+    .ticker-content {
+        display: flex;
+        animation: ticker-scroll 30s linear infinite;
+    }
+
+    .ticker-content.paused {
+        animation-play-state: paused;
+    }
+
+    .ticker-item {
+        @apply flex-shrink-0;
+    }
+
+    @keyframes ticker-scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* ================================
+       BREADCRUMBS
+       ================================ */
+    .breadcrumbs {
+        @apply flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400;
+        @apply flex-wrap;
+    }
+
+    .breadcrumbs a {
+        @apply hover:text-trama-red transition-colors;
+    }
+
+    .breadcrumbs .separator {
+        @apply text-gray-300 dark:text-gray-600;
+    }
+
+    .breadcrumbs .current {
+        @apply text-gray-700 dark:text-gray-300 font-medium truncate max-w-[200px] sm:max-w-none;
+    }
+
+    /* ================================
+       AUDIO TTS PLAYER
+       ================================ */
+    .tts-player {
+        @apply flex items-center gap-3 p-4 rounded-xl;
+        @apply bg-gray-100 dark:bg-dark-accent;
+        @apply border border-gray-200 dark:border-dark-secondary;
+    }
+
+    .tts-btn {
+        @apply w-12 h-12 rounded-full flex items-center justify-center;
+        @apply bg-trama-red text-white;
+        @apply hover:bg-trama-red-dark transition-all;
+        @apply hover:scale-105;
+    }
+
+    .tts-btn.playing {
+        @apply bg-gray-700;
+    }
+
+    .tts-btn svg {
+        @apply w-5 h-5;
+    }
+
+    .tts-progress {
+        @apply flex-1 h-1 bg-gray-300 dark:bg-dark-secondary rounded-full overflow-hidden;
+    }
+
+    .tts-progress-bar {
+        @apply h-full bg-trama-red transition-all duration-200;
+    }
 }

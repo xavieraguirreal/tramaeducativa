@@ -339,6 +339,134 @@ function handleImages() {
 }
 
 // ================================
+// TEXT-TO-SPEECH PLAYER
+// ================================
+Alpine.data('ttsPlayer', () => ({
+    isPlaying: false,
+    isPaused: false,
+    progress: 0,
+    progressText: '',
+    utterance: null,
+    textChunks: [],
+    currentChunk: 0,
+
+    init() {
+        // Check if speech synthesis is available
+        if (!('speechSynthesis' in window)) {
+            this.$el.style.display = 'none';
+            return;
+        }
+    },
+
+    getArticleText() {
+        const content = document.getElementById('article-content');
+        if (!content) return '';
+        return content.innerText || content.textContent;
+    },
+
+    togglePlay() {
+        if (this.isPlaying) {
+            this.pause();
+        } else if (this.isPaused) {
+            this.resume();
+        } else {
+            this.play();
+        }
+    },
+
+    play() {
+        const text = this.getArticleText();
+        if (!text) return;
+
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        // Split text into chunks (speech synthesis has limits)
+        this.textChunks = this.splitText(text, 200);
+        this.currentChunk = 0;
+        this.speakChunk();
+    },
+
+    splitText(text, maxWords) {
+        const words = text.split(/\s+/);
+        const chunks = [];
+        for (let i = 0; i < words.length; i += maxWords) {
+            chunks.push(words.slice(i, i + maxWords).join(' '));
+        }
+        return chunks;
+    },
+
+    speakChunk() {
+        if (this.currentChunk >= this.textChunks.length) {
+            this.stop();
+            return;
+        }
+
+        this.utterance = new SpeechSynthesisUtterance(this.textChunks[this.currentChunk]);
+        this.utterance.lang = 'es-AR';
+        this.utterance.rate = 1;
+        this.utterance.pitch = 1;
+
+        // Try to find Spanish voice
+        const voices = window.speechSynthesis.getVoices();
+        const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+        if (spanishVoice) {
+            this.utterance.voice = spanishVoice;
+        }
+
+        this.utterance.onstart = () => {
+            this.isPlaying = true;
+            this.isPaused = false;
+        };
+
+        this.utterance.onend = () => {
+            this.currentChunk++;
+            this.updateProgress();
+            if (this.currentChunk < this.textChunks.length) {
+                this.speakChunk();
+            } else {
+                this.stop();
+            }
+        };
+
+        this.utterance.onerror = () => {
+            this.stop();
+        };
+
+        this.updateProgress();
+        window.speechSynthesis.speak(this.utterance);
+    },
+
+    pause() {
+        window.speechSynthesis.pause();
+        this.isPlaying = false;
+        this.isPaused = true;
+    },
+
+    resume() {
+        window.speechSynthesis.resume();
+        this.isPlaying = true;
+        this.isPaused = false;
+    },
+
+    stop() {
+        window.speechSynthesis.cancel();
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.progress = 0;
+        this.currentChunk = 0;
+        this.progressText = '';
+    },
+
+    updateProgress() {
+        const total = this.textChunks.length;
+        const current = this.currentChunk + 1;
+        this.progress = (current / total) * 100;
+        this.progressText = `${Math.round(this.progress)}%`;
+    }
+}));
+
+// ================================
 // FONT SIZE ACCESSIBILITY
 // ================================
 window.TramaAccessibility = {

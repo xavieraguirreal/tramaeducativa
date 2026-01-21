@@ -17,10 +17,25 @@
     <!-- Article Header -->
     <header class="max-w-4xl mx-auto mb-8">
         <!-- Breadcrumb -->
-        <nav class="text-sm text-gray-500 mb-4">
-            <a href="{{ route('home') }}" class="hover:text-trama-red transition-colors">Inicio</a>
-            <span class="mx-2">/</span>
-            <a href="{{ route('category', $article->category) }}" class="hover:text-trama-red transition-colors">{{ $article->category->name }}</a>
+        <nav class="breadcrumbs mb-4" aria-label="Breadcrumb">
+            <a href="{{ route('home') }}">
+                <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span class="sr-only">Inicio</span>
+            </a>
+            <span class="separator">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </span>
+            <a href="{{ route('category', $article->category) }}">{{ $article->category->name }}</a>
+            <span class="separator">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </span>
+            <span class="current" title="{{ $article->title }}">{{ Str::limit($article->title, 40) }}</span>
         </nav>
 
         <div class="flex items-start justify-between gap-4 mb-4">
@@ -95,9 +110,48 @@
         @endif
     </figure>
 
+    <!-- Audio TTS Player -->
+    <div class="max-w-3xl mx-auto mb-6"
+         x-data="ttsPlayer()"
+         x-init="init()">
+        <div class="tts-player">
+            <button @click="togglePlay()"
+                    class="tts-btn"
+                    :class="{ 'playing': isPlaying }">
+                <svg x-show="!isPlaying" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg x-show="isPlaying" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+            <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span x-show="!isPlaying && !isPaused">Escuchar articulo</span>
+                        <span x-show="isPlaying">Reproduciendo...</span>
+                        <span x-show="isPaused && !isPlaying">Pausado</span>
+                    </span>
+                    <span class="text-xs text-gray-500" x-text="progressText"></span>
+                </div>
+                <div class="tts-progress">
+                    <div class="tts-progress-bar" :style="'width: ' + progress + '%'"></div>
+                </div>
+            </div>
+            <button @click="stop()"
+                    x-show="isPlaying || isPaused"
+                    class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                    title="Detener">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 6h12v12H6z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <!-- Article Body -->
     <div class="max-w-3xl mx-auto">
-        <div class="prose prose-lg dark:prose-invert max-w-none mb-8">
+        <div id="article-content" class="prose prose-lg dark:prose-invert max-w-none mb-8">
             {!! nl2br(e($article->body)) !!}
         </div>
 
@@ -240,14 +294,28 @@
         <h2 class="font-heading text-2xl font-bold dark:text-white mb-6 flex items-center gap-2">
             <span class="w-1 h-8 bg-trama-red rounded-full"></span>
             Tambien te puede interesar
+            @if($relatedWithAI ?? false)
+            <span class="text-xs font-normal px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full ml-2">
+                IA
+            </span>
+            @endif
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($relatedArticles as $related)
+            @foreach($relatedArticles as $item)
+            @php
+                $related = isset($item['article']) ? $item['article'] : $item;
+                $similarity = isset($item['similarity_percent']) ? $item['similarity_percent'] : null;
+            @endphp
             <article class="news-card overflow-hidden group">
-                <a href="{{ route('article.show', $related) }}" class="block overflow-hidden">
+                <a href="{{ route('article.show', $related) }}" class="block overflow-hidden relative">
                     <img src="{{ $related->featured_image_url }}"
                          alt="{{ $related->title }}"
                          class="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500">
+                    @if($similarity)
+                    <span class="absolute bottom-2 right-2 bg-purple-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+                        {{ $similarity }}
+                    </span>
+                    @endif
                 </a>
                 <div class="p-4">
                     <h3 class="font-semibold dark:text-white leading-tight bento-title">
