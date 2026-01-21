@@ -71,7 +71,7 @@ Trama Educativa es un portal de noticias de última generación, diseñado espec
 | **Cards Interactivas**   | Tarjetas con efectos hover, sombras dinámicas y transiciones suaves          |
 | **Skeleton Loading**     | Animación de carga elegante mientras se cargan las imágenes                  |
 | **Tipografía Adaptable** | Ajuste de tamaño de texto (A- / A / A+ / A++) para lectura cómoda            |
-| **Animaciones**          | Microinteracciones y efectos visuales (confetti en reacciones, transiciones) |
+| **Animaciones**          | Microinteracciones y efectos visuales (emojis flotantes en reacciones, transiciones) |
 | **Modo Oscuro/Claro**    | Cambio de tema con un clic, recuerda la preferencia del usuario              |
 
 ### 4. Accesibilidad Universal
@@ -249,3 +249,51 @@ Con tecnología comparable a la de los principales medios digitales del mundo, T
 
 **VERUMax**
 *Innovatio et Solutio Technologica*
+
+---
+
+## ADDENDUM - 21 de Enero de 2026
+
+### Nueva Funcionalidad: Resúmenes IA por Artículo
+
+Se implementó una nueva característica de Inteligencia Artificial que genera automáticamente resúmenes en formato de puntos clave para cada artículo publicado.
+
+#### ¿Qué es?
+
+Un cuadro destacado que aparece al inicio de cada artículo con 3-4 puntos que resumen lo esencial de la nota. Generado automáticamente por IA al momento de publicar.
+
+#### Ejemplo visual:
+
+```
+┌─────────────────────────────────────────────────┐
+│ ⚡ Resumen IA                           [Beta]  │
+│                                                 │
+│ • Gremios rechazan oferta salarial del 15%     │
+│ • Propuesta en tres tramos no cubre inflación  │
+│ • Posible paro de 48 horas la próxima semana   │
+│ • Afectaría a más de 15.000 escuelas           │
+└─────────────────────────────────────────────────┘
+```
+
+#### Beneficios:
+
+| Beneficio | Descripción |
+|-----------|-------------|
+| **Mejor UX** | El lector sabe rápidamente de qué trata la nota |
+| **Mayor engagement** | Decisión informada de seguir leyendo |
+| **Accesibilidad** | Facilita la lectura rápida (scanning) |
+| **Diferenciación** | Tecnología que usan medios como BBC, The Guardian |
+| **SEO** | Contenido estructurado que mejora posicionamiento |
+
+#### Costo adicional:
+
+| Concepto | Costo |
+|----------|-------|
+| VERUMax IA - Resúmenes | ~$0.002 USD por artículo |
+| Estimado mensual (50 artículos) | < $0.10 USD |
+
+> *El costo de los resúmenes IA es mínimo y se integra al módulo de IA existente sin cargos adicionales significativos.*
+
+---
+
+*Addendum preparado por VERUMax - 21/01/2026*

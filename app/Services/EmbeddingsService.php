@@ -207,6 +207,40 @@ class EmbeddingsService
     }
 
     /**
+     * Genera resumen IA de un articulo usando GPT
+     */
+    public function generateSummary(Article $article, int $maxPoints = 4): string
+    {
+        $text = $this->prepareArticleText($article);
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Content-Type' => 'application/json',
+        ])->timeout(60)->post($this->baseUrl . '/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => "Eres un editor de noticias educativas. Genera un resumen en bullet points (máximo {$maxPoints} puntos) del artículo. Cada punto debe ser conciso (máximo 15 palabras). Responde SOLO con los bullet points, sin introducción. Usa el formato: • Punto 1\n• Punto 2"
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $text
+                ]
+            ],
+            'max_tokens' => 300,
+            'temperature' => 0.3,
+        ]);
+
+        if (!$response->successful()) {
+            throw new Exception("Error OpenAI Chat: " . $response->body());
+        }
+
+        $result = $response->json();
+        return trim($result['choices'][0]['message']['content'] ?? '');
+    }
+
+    /**
      * Prepara el texto del articulo para embedding
      */
     protected function prepareArticleText(Article $article): string

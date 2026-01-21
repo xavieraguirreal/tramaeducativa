@@ -13,6 +13,7 @@ class Article extends Model
         'title',
         'slug',
         'excerpt',
+        'ai_summary',
         'body',
         'featured_image',
         'featured_image_caption',
