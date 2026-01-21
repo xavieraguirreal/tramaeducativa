@@ -49,6 +49,29 @@
     @stack('styles')
 </head>
 <body class="min-h-screen flex flex-col antialiased">
+    <!-- Page Loader -->
+    <div id="page-loader" class="fixed inset-0 z-[9999] bg-white dark:bg-dark-primary flex items-center justify-center transition-opacity duration-300">
+        <div class="text-center">
+            <div class="w-16 h-16 bg-trama-red rounded-xl flex items-center justify-center mb-4 mx-auto animate-pulse">
+                <span class="text-white font-heading font-bold text-2xl">TE</span>
+            </div>
+            <div class="flex items-center justify-center gap-1">
+                <div class="w-2 h-2 bg-trama-red rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                <div class="w-2 h-2 bg-trama-red rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                <div class="w-2 h-2 bg-trama-red rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 300);
+            }
+        });
+    </script>
+
     <!-- Reading Progress Bar -->
     @hasSection('show_progress')
     <div class="reading-progress"></div>

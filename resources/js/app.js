@@ -303,6 +303,11 @@ function handleImages() {
         if (img.dataset.imageHandled) return;
         img.dataset.imageHandled = 'true';
 
+        // Add lazy loading
+        if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+        }
+
         // Add skeleton class to parent if it's a card image
         const parent = img.parentElement;
         if (parent && (parent.tagName === 'A' || parent.classList.contains('overflow-hidden'))) {
@@ -349,8 +354,7 @@ Alpine.data('ttsPlayer', () => ({
     utterance: null,
     textChunks: [],
     currentChunk: 0,
-    voices: [],
-    selectedVoice: 0,
+    selectedVoice: null,
 
     init() {
         // Check if speech synthesis is available
@@ -370,26 +374,45 @@ Alpine.data('ttsPlayer', () => ({
 
     loadVoices() {
         const allVoices = window.speechSynthesis.getVoices();
-        // Filter Spanish voices
-        this.voices = allVoices.filter(v => v.lang.startsWith('es'));
-
-        // If no Spanish voices, use all voices
-        if (this.voices.length === 0) {
-            this.voices = allVoices;
-        }
-
-        // Restore saved preference
-        const saved = localStorage.getItem('trama_tts_voice');
-        if (saved) {
-            const index = this.voices.findIndex(v => v.name === saved);
-            if (index >= 0) this.selectedVoice = index;
-        }
+        this.selectedVoice = this.findBestVoice(allVoices);
     },
 
-    saveVoicePreference() {
-        if (this.voices[this.selectedVoice]) {
-            localStorage.setItem('trama_tts_voice', this.voices[this.selectedVoice].name);
-        }
+    findBestVoice(voices) {
+        // Priority: Argentina > Latin America > Spain > Any Spanish
+        // Prefer female voices
+
+        const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+        if (spanishVoices.length === 0) return voices[0] || null;
+
+        // Check for female indicators in voice name
+        const isFemale = (name) => {
+            const femaleNames = ['female', 'femenin', 'mujer', 'woman', 'sabina', 'helena', 'laura', 'lucia', 'monica', 'paulina', 'maria', 'carmen', 'rosa', 'ana', 'elena', 'sofia', 'isabella'];
+            return femaleNames.some(f => name.toLowerCase().includes(f));
+        };
+
+        // 1. Try Argentina female
+        let voice = spanishVoices.find(v => v.lang === 'es-AR' && isFemale(v.name));
+        if (voice) return voice;
+
+        // 2. Try Argentina any
+        voice = spanishVoices.find(v => v.lang === 'es-AR');
+        if (voice) return voice;
+
+        // 3. Try Latin American female (MX, CO, CL, PE, etc.)
+        const latinLangs = ['es-MX', 'es-CO', 'es-CL', 'es-PE', 'es-VE', 'es-419', 'es-US'];
+        voice = spanishVoices.find(v => latinLangs.includes(v.lang) && isFemale(v.name));
+        if (voice) return voice;
+
+        // 4. Try Latin American any
+        voice = spanishVoices.find(v => latinLangs.includes(v.lang));
+        if (voice) return voice;
+
+        // 5. Try any Spanish female
+        voice = spanishVoices.find(v => isFemale(v.name));
+        if (voice) return voice;
+
+        // 6. Any Spanish voice
+        return spanishVoices[0];
     },
 
     getArticleText() {
@@ -441,9 +464,9 @@ Alpine.data('ttsPlayer', () => ({
         this.utterance.rate = 1;
         this.utterance.pitch = 1;
 
-        // Use selected voice
-        if (this.voices[this.selectedVoice]) {
-            this.utterance.voice = this.voices[this.selectedVoice];
+        // Use best voice found
+        if (this.selectedVoice) {
+            this.utterance.voice = this.selectedVoice;
         }
 
         this.utterance.onstart = () => {

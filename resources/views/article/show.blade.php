@@ -114,7 +114,7 @@
     <div class="max-w-3xl mx-auto mb-6"
          x-data="ttsPlayer()"
          x-init="init()">
-        <div class="tts-player flex-wrap gap-3">
+        <div class="tts-player">
             <button @click="togglePlay()"
                     class="tts-btn"
                     :class="{ 'playing': isPlaying }">
@@ -125,7 +125,7 @@
                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                 </svg>
             </button>
-            <div class="flex-1 min-w-[200px]">
+            <div class="flex-1">
                 <div class="flex items-center justify-between mb-1">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                         <span x-show="!isPlaying && !isPaused">Escuchar articulo</span>
@@ -137,17 +137,6 @@
                 <div class="tts-progress">
                     <div class="tts-progress-bar" :style="'width: ' + progress + '%'"></div>
                 </div>
-            </div>
-            <!-- Voice Selector -->
-            <div class="flex items-center gap-2" x-show="voices.length > 1">
-                <label class="text-xs text-gray-500">Voz:</label>
-                <select x-model="selectedVoice"
-                        @change="saveVoicePreference()"
-                        class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-secondary text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-trama-red">
-                    <template x-for="(voice, index) in voices" :key="index">
-                        <option :value="index" x-text="voice.name.replace('Microsoft ', '').replace('Google ', '')"></option>
-                    </template>
-                </select>
             </div>
             <button @click="stop()"
                     x-show="isPlaying || isPaused"
