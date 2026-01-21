@@ -289,10 +289,10 @@ Un cuadro destacado que aparece al inicio de cada artículo con 3-4 puntos que r
 
 | Concepto | Costo |
 |----------|-------|
-| VERUMax IA - Resúmenes | ~$0.01 USD por artículo |
-| Estimado mensual (50 artículos) | ~$0.50 USD |
+| VERUMax IA - Resúmenes | ~$0.02 USD por artículo |
+| Estimado mensual (50 artículos) | ~$1 USD |
 
-> *El costo de los resúmenes IA se integra al módulo de IA existente. Es un valor mínimo que se suma al consumo general de la API de VERUMax IA.*
+> *El costo de los resúmenes IA se integra al módulo de IA existente y se suma al consumo general de la API de VERUMax IA.*
 
 ---
 
