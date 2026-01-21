@@ -349,12 +349,46 @@ Alpine.data('ttsPlayer', () => ({
     utterance: null,
     textChunks: [],
     currentChunk: 0,
+    voices: [],
+    selectedVoice: 0,
 
     init() {
         // Check if speech synthesis is available
         if (!('speechSynthesis' in window)) {
             this.$el.style.display = 'none';
             return;
+        }
+
+        // Load voices
+        this.loadVoices();
+
+        // Voices may load async
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
+        }
+    },
+
+    loadVoices() {
+        const allVoices = window.speechSynthesis.getVoices();
+        // Filter Spanish voices
+        this.voices = allVoices.filter(v => v.lang.startsWith('es'));
+
+        // If no Spanish voices, use all voices
+        if (this.voices.length === 0) {
+            this.voices = allVoices;
+        }
+
+        // Restore saved preference
+        const saved = localStorage.getItem('trama_tts_voice');
+        if (saved) {
+            const index = this.voices.findIndex(v => v.name === saved);
+            if (index >= 0) this.selectedVoice = index;
+        }
+    },
+
+    saveVoicePreference() {
+        if (this.voices[this.selectedVoice]) {
+            localStorage.setItem('trama_tts_voice', this.voices[this.selectedVoice].name);
         }
     },
 
@@ -407,11 +441,9 @@ Alpine.data('ttsPlayer', () => ({
         this.utterance.rate = 1;
         this.utterance.pitch = 1;
 
-        // Try to find Spanish voice
-        const voices = window.speechSynthesis.getVoices();
-        const spanishVoice = voices.find(v => v.lang.startsWith('es'));
-        if (spanishVoice) {
-            this.utterance.voice = spanishVoice;
+        // Use selected voice
+        if (this.voices[this.selectedVoice]) {
+            this.utterance.voice = this.voices[this.selectedVoice];
         }
 
         this.utterance.onstart = () => {
