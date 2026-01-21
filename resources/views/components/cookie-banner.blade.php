@@ -30,8 +30,7 @@
                             </div>
                             <div>
                                 <h3 class="font-heading font-bold text-dark-primary dark:text-white text-sm md:text-base">
-                                    Notitia et Securitas
-                                    <span class="text-gray-400 font-normal text-xs ml-2">(Información y Seguridad)</span>
+                                    Información y Seguridad
                                 </h3>
                                 <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 leading-relaxed">
                                     Este sitio utiliza cookies y tecnologías similares para mejorar tu experiencia.
@@ -44,9 +43,8 @@
                     <!-- Accept Button -->
                     <div class="flex-shrink-0">
                         <button @click="accept()"
-                                class="w-full md:w-auto px-6 py-2.5 bg-trama-red hover:bg-trama-red-dark text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg">
-                            Accepto
-                            <span class="text-white/70 text-xs ml-1">(Acepto)</span>
+                                class="w-full md:w-auto px-8 py-2.5 bg-trama-red hover:bg-trama-red-dark text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg">
+                            Ok
                         </button>
                     </div>
                 </div>

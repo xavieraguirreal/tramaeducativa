@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font Size Accessibility - Outside layers for higher specificity */
+html.font-size-small { font-size: 14px !important; }
+html.font-size-normal { font-size: 16px !important; }
+html.font-size-large { font-size: 18px !important; }
+html.font-size-xlarge { font-size: 20px !important; }
+
 @layer base {
     /* Tipografías de Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
@@ -9,12 +15,6 @@
     html {
         scroll-behavior: smooth;
     }
-
-    /* Font Size Accessibility */
-    html.font-size-small { font-size: 14px; }
-    html.font-size-normal { font-size: 16px; }
-    html.font-size-large { font-size: 18px; }
-    html.font-size-xlarge { font-size: 20px; }
 
     body {
         @apply font-sans text-body bg-light-secondary text-dark-primary;
