@@ -238,6 +238,9 @@
                 <div id="article-content" class="prose prose-lg dark:prose-invert max-w-none mb-8 prose-headings:scroll-mt-24">
                     {!! $article->formatted_body !!}
                 </div>
+
+                <!-- Ad In-Article -->
+                <x-ad-slot type="in-article" id="ad-article-bottom" />
             </div>
         </div>
 
@@ -372,6 +375,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Ad Before Related -->
+    <div class="max-w-4xl mx-auto mt-8">
+        <x-ad-slot type="horizontal" id="ad-article-related" />
     </div>
 
     <!-- Related Articles -->

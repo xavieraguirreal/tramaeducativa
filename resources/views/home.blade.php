@@ -82,6 +82,9 @@
         </div>
     </section>
 
+    <!-- Ad Banner Top -->
+    <x-ad-slot type="horizontal" id="ad-home-top" class="mb-8" />
+
     <!-- Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
@@ -160,6 +163,9 @@
             @endif
             @endforeach
             @endif
+
+            <!-- Ad In-Content -->
+            <x-ad-slot type="horizontal" id="ad-home-middle" />
 
             <!-- Categorias Section -->
             <section>
@@ -281,6 +287,9 @@
                     @endforeach
                 </div>
             </div>
+
+            <!-- Ad Sidebar -->
+            <x-ad-slot type="square" id="ad-sidebar-1" />
 
             <!-- Newsletter -->
             <div class="bg-trama-red text-white rounded-lg p-6">
