@@ -8,6 +8,28 @@
                 <span>Mar del Plata, Argentina</span>
             </div>
             <div class="flex items-center gap-4">
+                <!-- Font Size Controls -->
+                <div class="flex items-center gap-1 border-r border-gray-600 pr-4 mr-2">
+                    <span class="text-xs text-gray-400 mr-1">Texto:</span>
+                    <button onclick="TramaAccessibility.decrease()"
+                            data-font-decrease
+                            class="w-6 h-6 flex items-center justify-center rounded hover:bg-dark-secondary transition-colors text-sm font-medium"
+                            title="Reducir texto">
+                        A-
+                    </button>
+                    <button onclick="TramaAccessibility.reset()"
+                            class="w-6 h-6 flex items-center justify-center rounded hover:bg-dark-secondary transition-colors text-sm"
+                            title="Texto normal">
+                        A
+                    </button>
+                    <button onclick="TramaAccessibility.increase()"
+                            data-font-increase
+                            class="w-6 h-6 flex items-center justify-center rounded hover:bg-dark-secondary transition-colors text-sm font-bold"
+                            title="Aumentar texto">
+                        A+
+                    </button>
+                </div>
+
                 <!-- Dark Mode Toggle -->
                 <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                         class="p-1 rounded hover:bg-dark-secondary transition-colors"
@@ -113,7 +135,28 @@
                 </svg>
                 Mi lista de lectura
             </a>
-            <div class="pt-4 border-t dark:border-dark-secondary">
+            <div class="pt-4 border-t dark:border-dark-secondary space-y-2">
+                <!-- Font Size Controls Mobile -->
+                <div class="px-4 py-2">
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mb-2 block">Tamaño de texto</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="TramaAccessibility.decrease()"
+                                data-font-decrease
+                                class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-dark-accent text-dark-primary dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors">
+                            A-
+                        </button>
+                        <button onclick="TramaAccessibility.reset()"
+                                class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-dark-accent text-dark-primary dark:text-white hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors">
+                            Normal
+                        </button>
+                        <button onclick="TramaAccessibility.increase()"
+                                data-font-increase
+                                class="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-dark-accent text-dark-primary dark:text-white font-bold hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors">
+                            A+
+                        </button>
+                    </div>
+                </div>
+
                 <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                         class="flex items-center gap-2 px-4 py-2 text-dark-primary dark:text-white w-full hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-lg transition-colors">
                     <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -10,6 +10,12 @@
         scroll-behavior: smooth;
     }
 
+    /* Font Size Accessibility */
+    html.font-size-small { font-size: 14px; }
+    html.font-size-normal { font-size: 16px; }
+    html.font-size-large { font-size: 18px; }
+    html.font-size-xlarge { font-size: 20px; }
+
     body {
         @apply font-sans text-body bg-light-secondary text-dark-primary;
         @apply dark:bg-dark-primary dark:text-light-primary;

@@ -339,6 +339,74 @@ function handleImages() {
 }
 
 // ================================
+// FONT SIZE ACCESSIBILITY
+// ================================
+window.TramaAccessibility = {
+    storageKey: 'trama_font_size',
+    sizes: ['small', 'normal', 'large', 'xlarge'],
+    labels: { small: 'A-', normal: 'A', large: 'A+', xlarge: 'A++' },
+
+    getCurrentSize() {
+        return localStorage.getItem(this.storageKey) || 'normal';
+    },
+
+    setSize(size) {
+        // Remove all font size classes
+        this.sizes.forEach(s => document.documentElement.classList.remove(`font-size-${s}`));
+        // Add new one
+        document.documentElement.classList.add(`font-size-${size}`);
+        localStorage.setItem(this.storageKey, size);
+        this.updateButtons();
+    },
+
+    increase() {
+        const current = this.getCurrentSize();
+        const index = this.sizes.indexOf(current);
+        if (index < this.sizes.length - 1) {
+            this.setSize(this.sizes[index + 1]);
+            showToast(`Tamaño de texto: ${this.labels[this.sizes[index + 1]]}`);
+        }
+    },
+
+    decrease() {
+        const current = this.getCurrentSize();
+        const index = this.sizes.indexOf(current);
+        if (index > 0) {
+            this.setSize(this.sizes[index - 1]);
+            showToast(`Tamaño de texto: ${this.labels[this.sizes[index - 1]]}`);
+        }
+    },
+
+    reset() {
+        this.setSize('normal');
+        showToast('Tamaño de texto restaurado');
+    },
+
+    updateButtons() {
+        const current = this.getCurrentSize();
+        const index = this.sizes.indexOf(current);
+
+        document.querySelectorAll('[data-font-decrease]').forEach(btn => {
+            btn.disabled = index === 0;
+            btn.classList.toggle('opacity-50', index === 0);
+        });
+
+        document.querySelectorAll('[data-font-increase]').forEach(btn => {
+            btn.disabled = index === this.sizes.length - 1;
+            btn.classList.toggle('opacity-50', index === this.sizes.length - 1);
+        });
+    },
+
+    init() {
+        const saved = this.getCurrentSize();
+        if (saved && saved !== 'normal') {
+            document.documentElement.classList.add(`font-size-${saved}`);
+        }
+        this.updateButtons();
+    }
+};
+
+// ================================
 // INITIALIZE
 // ================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -346,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollToTop();
     TramaReadingList.updateCounter();
     handleImages();
+    TramaAccessibility.init();
 });
 
 // Also handle dynamically loaded images
