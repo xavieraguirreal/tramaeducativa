@@ -170,34 +170,39 @@ window.TramaReadingList = {
 };
 
 // ================================
-// CONFETTI EFFECT
+// FLOATING EMOJI EFFECT
 // ================================
-window.createConfetti = function(element) {
-    const colors = ['#C84347', '#059669', '#2563EB', '#DB2777', '#F59E0B'];
+window.createFloatingEmoji = function(element) {
+    const emojiEl = element.querySelector('.emoji');
+    if (!emojiEl) return;
+
+    const emoji = emojiEl.textContent.trim();
     const rect = element.getBoundingClientRect();
 
-    for (let i = 0; i < 12; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.cssText = `
-            left: ${rect.left + rect.width / 2}px;
-            top: ${rect.top + rect.height / 2}px;
-            width: 8px;
-            height: 8px;
-            background: ${colors[Math.floor(Math.random() * colors.length)]};
-            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-            transform: translate(${(Math.random() - 0.5) * 100}px, 0);
+    // Create 3 floating emojis with slight variations
+    for (let i = 0; i < 3; i++) {
+        const floater = document.createElement('div');
+        floater.className = 'floating-emoji';
+        floater.textContent = emoji;
+        floater.style.cssText = `
+            position: fixed;
+            left: ${rect.left + rect.width / 2 + (i - 1) * 20}px;
+            top: ${rect.top}px;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 9999;
         `;
-        document.body.appendChild(confetti);
+        document.body.appendChild(floater);
 
-        // Animate
-        confetti.animate([
-            { transform: `translate(${(Math.random() - 0.5) * 100}px, 0) rotate(0deg)`, opacity: 1 },
-            { transform: `translate(${(Math.random() - 0.5) * 150}px, ${100 + Math.random() * 50}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+        // Animate floating up and fading
+        floater.animate([
+            { transform: 'translateY(0) scale(1)', opacity: 1 },
+            { transform: `translateY(-80px) scale(${1.2 - i * 0.1})`, opacity: 0 }
         ], {
-            duration: 800 + Math.random() * 400,
+            duration: 700 + i * 100,
+            delay: i * 50,
             easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-        }).onfinish = () => confetti.remove();
+        }).onfinish = () => floater.remove();
     }
 };
 
@@ -226,7 +231,7 @@ Alpine.data('reactions', (articleId, initialCounts = {}) => ({
 
         if (isAdding) {
             btn.classList.add('pop');
-            createConfetti(btn);
+            createFloatingEmoji(btn);
             setTimeout(() => btn.classList.remove('pop'), 300);
         }
     }

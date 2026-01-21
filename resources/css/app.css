@@ -382,22 +382,11 @@ html.font-size-xlarge { font-size: 20px !important; }
     .stagger-fade-in > *:nth-child(8) { animation-delay: 0.4s; }
 
     /* ================================
-       CONFETTI ANIMATION
+       FLOATING EMOJI ANIMATION
        ================================ */
-    @keyframes confetti-fall {
-        0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(100px) rotate(720deg);
-            opacity: 0;
-        }
-    }
-
-    .confetti {
-        @apply absolute pointer-events-none;
-        animation: confetti-fall 1s ease-out forwards;
+    .floating-emoji {
+        @apply pointer-events-none select-none;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     /* ================================
