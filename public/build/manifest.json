@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-D3dsy7J0.css",
+    "file": "assets/app-C5ikKM-F.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -9,5 +9,14 @@
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
+  },
+  "resources/js/filament-help.js": {
+    "file": "assets/filament-help-D0It9O3G.js",
+    "name": "filament-help",
+    "src": "resources/js/filament-help.js",
+    "isEntry": true,
+    "css": [
+      "assets/filament-help-DB0Q8XAf.css"
+    ]
   }
 }
