@@ -2,3 +2,24 @@
     RewriteEngine On
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+# Disable ModSecurity
+<IfModule mod_security.c>
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
+
+<IfModule mod_security2.c>
+    SecRuleEngine Off
+</IfModule>
+
+# Disable LiteSpeed WAF
+<IfModule LiteSpeed>
+    SecRuleEngine Off
+    SecRequestBodyAccess Off
+</IfModule>
+
+# Allow all methods
+<Limit GET POST PUT DELETE PATCH>
+    Require all granted
+</Limit>
