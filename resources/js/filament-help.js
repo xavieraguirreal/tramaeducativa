@@ -12,51 +12,73 @@ const tours = {
     // Dashboard
     'dashboard': [
         {
-            element: '[href*="/admin"]',
             popover: {
-                title: 'Panel de Administración',
-                description: 'Bienvenido al panel de Trama Educativa. Desde aquí puedes gestionar todo el contenido del sitio.',
+                title: '¡Bienvenido a Trama Educativa!',
+                description: 'Este es tu panel de administración. Desde aquí puedes gestionar todo el contenido del portal de noticias educativas. Te guiaremos por las principales funciones.',
+            }
+        },
+        {
+            element: '.fi-sidebar',
+            popover: {
+                title: 'Menú de Navegación',
+                description: 'Este es el menú principal. Desde aquí accedes a todas las secciones del panel: Artículos, Categorías, Autores y Etiquetas.',
+                side: 'right'
+            }
+        },
+        {
+            element: '.fi-sidebar-group',
+            popover: {
+                title: 'Sección Contenido',
+                description: 'Aquí encontrarás todo lo relacionado con la gestión de contenido del portal.',
+                side: 'right'
+            }
+        },
+        {
+            element: 'a[href*="articles"]',
+            popover: {
+                title: 'Artículos',
+                description: 'La sección más importante. Aquí creas, editas y publicas las noticias del portal. Es similar a "Entradas" en WordPress.',
+                side: 'right'
+            }
+        },
+        {
+            element: 'a[href*="categories"]',
+            popover: {
+                title: 'Categorías',
+                description: 'Organiza tus artículos por temas. Cada artículo debe tener una categoría asignada (ej: Locales, Universidad, Gremiales).',
+                side: 'right'
+            }
+        },
+        {
+            element: 'a[href*="authors"]',
+            popover: {
+                title: 'Autores',
+                description: 'Gestiona los autores del portal. Puedes agregar foto, biografía y redes sociales de cada autor.',
+                side: 'right'
+            }
+        },
+        {
+            element: 'a[href*="tags"]',
+            popover: {
+                title: 'Etiquetas',
+                description: 'Las etiquetas son palabras clave que ayudan a clasificar el contenido. Un artículo puede tener múltiples etiquetas.',
+                side: 'right'
+            }
+        },
+        {
+            element: '.fi-avatar',
+            popover: {
+                title: 'Tu Perfil',
+                description: 'Desde aquí puedes cerrar sesión o ver tu perfil de usuario.',
                 side: 'bottom'
             }
         },
         {
-            element: 'nav[aria-label="Sidebar"]',
+            element: '#trama-help-buttons',
             popover: {
-                title: 'Menú Principal',
-                description: 'Este es el menú de navegación. Aquí encontrarás todas las secciones: Artículos, Categorías, Autores y Etiquetas.',
-                side: 'right'
-            }
-        },
-        {
-            element: '[href*="articles"]',
-            popover: {
-                title: 'Artículos',
-                description: 'Gestiona los artículos del portal. Puedes crear, editar, publicar y eliminar notas.',
-                side: 'right'
-            }
-        },
-        {
-            element: '[href*="categories"]',
-            popover: {
-                title: 'Categorías',
-                description: 'Organiza los artículos en categorías temáticas.',
-                side: 'right'
-            }
-        },
-        {
-            element: '[href*="authors"]',
-            popover: {
-                title: 'Autores',
-                description: 'Administra los autores y colaboradores del portal.',
-                side: 'right'
-            }
-        },
-        {
-            element: '[href*="tags"]',
-            popover: {
-                title: 'Etiquetas',
-                description: 'Crea y gestiona etiquetas para clasificar el contenido.',
-                side: 'right'
+                title: 'Ayuda Siempre Disponible',
+                description: 'Estos botones de ayuda están disponibles en todas las páginas. "Tour" te guía paso a paso, "Tips" muestra consejos rápidos.',
+                side: 'bottom'
             }
         }
     ],
@@ -64,34 +86,58 @@ const tours = {
     // Listado de artículos
     'articles': [
         {
-            element: 'h1',
+            element: '.fi-header-heading',
             popover: {
                 title: 'Listado de Artículos',
-                description: 'Aquí ves todos los artículos del portal. Puedes ordenarlos, filtrarlos y buscar.',
+                description: 'Aquí ves todos los artículos del portal. Puedes ver su estado (Borrador/Publicado), categoría, autor y estadísticas de vistas.',
                 side: 'bottom'
             }
         },
         {
-            element: '[wire\\:click*="create"], a[href*="create"]',
+            element: '.fi-ta-ctn',
             popover: {
-                title: 'Crear Artículo',
-                description: 'Haz clic aquí para crear un nuevo artículo.',
+                title: 'Tabla de Artículos',
+                description: 'Cada fila es un artículo. Puedes ver la imagen destacada, título, categoría, autor, estado y más información.',
+                side: 'top'
+            }
+        },
+        {
+            element: '.fi-ac-btn-action, a[href*="create"]',
+            popover: {
+                title: 'Crear Nuevo Artículo',
+                description: 'Haz clic aquí para crear un nuevo artículo. Se abrirá el formulario de edición.',
                 side: 'left'
             }
         },
         {
-            element: 'input[type="search"], input[placeholder*="Buscar"]',
+            element: '.fi-ta-search-field',
             popover: {
-                title: 'Buscar',
-                description: 'Escribe aquí para buscar artículos por título o contenido.',
+                title: 'Buscar Artículos',
+                description: 'Escribe para buscar artículos por título. Es útil cuando tienes muchos artículos.',
                 side: 'bottom'
             }
         },
         {
-            element: 'table, .fi-ta-table',
+            element: '.fi-ta-header-cell',
             popover: {
-                title: 'Tabla de Artículos',
-                description: 'Haz clic en cualquier fila para editar el artículo. Las columnas se pueden ordenar haciendo clic en el encabezado.',
+                title: 'Ordenar por Columna',
+                description: 'Haz clic en cualquier encabezado de columna para ordenar la tabla. Útil para ver los más recientes o más vistos.',
+                side: 'bottom'
+            }
+        },
+        {
+            element: '.fi-ta-row',
+            popover: {
+                title: 'Editar un Artículo',
+                description: 'Haz clic en "Editar" en cualquier fila para modificar ese artículo. También puedes ver el artículo publicado con "Ver".',
+                side: 'left'
+            }
+        },
+        {
+            element: '.fi-pagination',
+            popover: {
+                title: 'Navegación de Páginas',
+                description: 'Si tienes muchos artículos, usa estos controles para navegar entre páginas.',
                 side: 'top'
             }
         }
@@ -100,42 +146,48 @@ const tours = {
     // Crear/Editar artículo
     'articles-form': [
         {
-            element: 'input[name*="title"], [wire\\:model*="title"]',
             popover: {
-                title: 'Título',
-                description: 'El título principal del artículo. Será visible en el listado y en la página del artículo.',
+                title: 'Editor de Artículo',
+                description: 'Este es el formulario para crear o editar artículos. Completa los campos y guarda para publicar.',
+            }
+        },
+        {
+            element: '.fi-fo-field-wrp:has(input)',
+            popover: {
+                title: 'Título del Artículo',
+                description: 'Escribe un título claro y atractivo. Este título aparecerá en el portal y en los buscadores.',
                 side: 'bottom'
             }
         },
         {
-            element: '[wire\\:model*="category"], select[name*="category"]',
+            element: '.fi-fo-rich-editor, .trix-editor, textarea[id*="content"]',
             popover: {
-                title: 'Categoría',
-                description: 'Selecciona la categoría principal del artículo.',
-                side: 'bottom'
-            }
-        },
-        {
-            element: '[wire\\:model*="author"], select[name*="author"]',
-            popover: {
-                title: 'Autor',
-                description: 'Selecciona quién escribió este artículo.',
-                side: 'bottom'
-            }
-        },
-        {
-            element: '[wire\\:model*="content"], .trix-editor, .ql-editor, textarea',
-            popover: {
-                title: 'Contenido',
-                description: 'Escribe aquí el cuerpo del artículo. Puedes usar formato, agregar imágenes y enlaces.',
+                title: 'Contenido del Artículo',
+                description: 'Aquí escribes el cuerpo de la noticia. Puedes dar formato al texto, agregar imágenes, enlaces y más.',
                 side: 'top'
             }
         },
         {
-            element: 'button[type="submit"], button[wire\\:click*="save"]',
+            element: '.fi-fo-select',
             popover: {
-                title: 'Guardar',
-                description: 'Cuando termines, haz clic aquí para guardar los cambios.',
+                title: 'Campos de Selección',
+                description: 'Usa los desplegables para seleccionar la categoría, autor y otras opciones del artículo.',
+                side: 'bottom'
+            }
+        },
+        {
+            element: '.fi-fo-file-upload, [wire\\:model*="image"]',
+            popover: {
+                title: 'Imagen Destacada',
+                description: 'Sube una imagen que represente el artículo. Esta imagen aparecerá en el listado y al compartir en redes.',
+                side: 'bottom'
+            }
+        },
+        {
+            element: '.fi-ac-btn-action[type="submit"], button[wire\\:click*="save"], .fi-form-actions button',
+            popover: {
+                title: 'Guardar Artículo',
+                description: 'Cuando termines, haz clic aquí para guardar. El artículo se publicará según el estado seleccionado.',
                 side: 'left'
             }
         }
@@ -144,18 +196,34 @@ const tours = {
     // Categorías
     'categories': [
         {
-            element: 'h1',
+            element: '.fi-header-heading',
             popover: {
-                title: 'Categorías',
-                description: 'Las categorías organizan los artículos por temas. Cada artículo debe tener una categoría.',
+                title: 'Gestión de Categorías',
+                description: 'Las categorías organizan tus artículos por temas. Es importante tener categorías claras para que los lectores encuentren el contenido.',
                 side: 'bottom'
             }
         },
         {
-            element: '[wire\\:click*="create"], a[href*="create"]',
+            element: '.fi-ac-btn-action, a[href*="create"]',
             popover: {
-                title: 'Nueva Categoría',
-                description: 'Crea una nueva categoría para organizar los artículos.',
+                title: 'Crear Nueva Categoría',
+                description: 'Agrega una nueva categoría cuando necesites clasificar contenido de un tema nuevo.',
+                side: 'left'
+            }
+        },
+        {
+            element: '.fi-ta-ctn',
+            popover: {
+                title: 'Lista de Categorías',
+                description: 'Aquí ves todas las categorías existentes. Puedes editarlas o eliminarlas (si no tienen artículos asociados).',
+                side: 'top'
+            }
+        },
+        {
+            element: '.fi-ta-row',
+            popover: {
+                title: 'Editar Categoría',
+                description: 'Haz clic en una categoría para editar su nombre, descripción o imagen.',
                 side: 'left'
             }
         }
@@ -164,11 +232,35 @@ const tours = {
     // Autores
     'authors': [
         {
-            element: 'h1',
+            element: '.fi-header-heading',
             popover: {
-                title: 'Autores',
-                description: 'Gestiona los autores del portal. Cada autor puede tener múltiples artículos.',
+                title: 'Gestión de Autores',
+                description: 'Aquí administras los autores que escriben para el portal. Cada artículo debe tener un autor asignado.',
                 side: 'bottom'
+            }
+        },
+        {
+            element: '.fi-ac-btn-action, a[href*="create"]',
+            popover: {
+                title: 'Agregar Nuevo Autor',
+                description: 'Registra un nuevo colaborador del portal. Puedes agregar su foto, biografía y enlaces a redes sociales.',
+                side: 'left'
+            }
+        },
+        {
+            element: '.fi-ta-ctn',
+            popover: {
+                title: 'Lista de Autores',
+                description: 'Todos los autores registrados aparecen aquí. Puedes ver cuántos artículos tiene cada uno.',
+                side: 'top'
+            }
+        },
+        {
+            element: '.fi-ta-row',
+            popover: {
+                title: 'Perfil del Autor',
+                description: 'Haz clic para editar la información del autor: nombre, foto, biografía y redes sociales.',
+                side: 'left'
             }
         }
     ],
@@ -176,11 +268,35 @@ const tours = {
     // Etiquetas
     'tags': [
         {
-            element: 'h1',
+            element: '.fi-header-heading',
             popover: {
-                title: 'Etiquetas',
-                description: 'Las etiquetas permiten clasificar artículos con palabras clave. Un artículo puede tener múltiples etiquetas.',
+                title: 'Gestión de Etiquetas',
+                description: 'Las etiquetas son palabras clave que ayudan a clasificar el contenido. A diferencia de las categorías, un artículo puede tener múltiples etiquetas.',
                 side: 'bottom'
+            }
+        },
+        {
+            element: '.fi-ac-btn-action, a[href*="create"]',
+            popover: {
+                title: 'Crear Nueva Etiqueta',
+                description: 'Agrega una etiqueta nueva. Las etiquetas ayudan a los lectores a encontrar contenido relacionado.',
+                side: 'left'
+            }
+        },
+        {
+            element: '.fi-ta-ctn',
+            popover: {
+                title: 'Lista de Etiquetas',
+                description: 'Todas las etiquetas del portal. Puedes ver cuántos artículos usan cada etiqueta.',
+                side: 'top'
+            }
+        },
+        {
+            element: '.fi-ta-row',
+            popover: {
+                title: 'Editar Etiqueta',
+                description: 'Modifica el nombre de la etiqueta. Los artículos que la usan se actualizarán automáticamente.',
+                side: 'left'
             }
         }
     ]
@@ -189,23 +305,47 @@ const tours = {
 // Tips estáticos por página
 const tips = {
     'dashboard': [
-        { selector: '.fi-sidebar-nav', text: 'Menú de navegación', type: 'info', position: 'right' },
-        { selector: '.fi-avatar', text: 'Tu perfil de usuario', type: 'info', position: 'bottom' },
+        { selector: '.fi-sidebar', text: 'Menú principal', type: 'info', position: 'right' },
+        { selector: 'a[href*="articles"]', text: 'Gestionar noticias', type: 'action', position: 'right' },
+        { selector: 'a[href*="categories"]', text: 'Organizar por temas', type: 'info', position: 'right' },
+        { selector: 'a[href*="authors"]', text: 'Redactores del portal', type: 'info', position: 'right' },
+        { selector: 'a[href*="tags"]', text: 'Palabras clave', type: 'info', position: 'right' },
+        { selector: '.fi-avatar', text: 'Tu cuenta', type: 'info', position: 'left' },
+        { selector: '#trama-tour-btn', text: 'Guía paso a paso', type: 'tip', position: 'bottom' },
+        { selector: '#trama-tips-btn', text: 'Ver/ocultar ayudas', type: 'tip', position: 'bottom' },
     ],
     'articles': [
-        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Crear nuevo artículo', type: 'action', position: 'left' },
-        { selector: '.fi-ta-search-field input, input[placeholder*="Buscar"], .fi-input', text: 'Buscar por título', type: 'tip', position: 'bottom' },
-        { selector: '.fi-ta-header-cell:first-child', text: 'Ordenar columnas', type: 'tip', position: 'bottom' },
-        { selector: '.fi-sidebar-item.fi-active', text: 'Sección actual', type: 'info', position: 'right' },
+        { selector: '.fi-ac-btn-action, a[href*="create"]', text: 'Crear artículo nuevo', type: 'action', position: 'left' },
+        { selector: '.fi-ta-search-field', text: 'Buscar por título', type: 'tip', position: 'bottom' },
+        { selector: '.fi-ta-header-cell:nth-child(2)', text: 'Ordenar por columna', type: 'tip', position: 'bottom' },
+        { selector: '.fi-sidebar-item.fi-active', text: 'Estás aquí', type: 'info', position: 'right' },
+        { selector: '.fi-ta-row:first-child', text: 'Clic en Editar para modificar', type: 'tip', position: 'left' },
+        { selector: '.fi-ta-row:first-child .fi-badge', text: 'Estado del artículo', type: 'info', position: 'top' },
+    ],
+    'articles-form': [
+        { selector: '.fi-fo-field-wrp:first-child', text: 'Título de la noticia', type: 'info', position: 'right' },
+        { selector: '.fi-fo-rich-editor, textarea', text: 'Escribe el contenido aquí', type: 'tip', position: 'top' },
+        { selector: '.fi-fo-select:first-of-type', text: 'Selecciona categoría', type: 'info', position: 'right' },
+        { selector: '.fi-fo-file-upload', text: 'Imagen destacada', type: 'action', position: 'left' },
+        { selector: '.fi-form-actions button', text: 'Guardar cambios', type: 'action', position: 'left' },
     ],
     'categories': [
-        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nueva categoría', type: 'action', position: 'left' },
+        { selector: '.fi-ac-btn-action, a[href*="create"]', text: 'Agregar categoría', type: 'action', position: 'left' },
+        { selector: '.fi-ta-search-field', text: 'Buscar categorías', type: 'tip', position: 'bottom' },
+        { selector: '.fi-ta-row:first-child', text: 'Clic para editar', type: 'tip', position: 'left' },
+        { selector: '.fi-sidebar-item.fi-active', text: 'Estás aquí', type: 'info', position: 'right' },
     ],
     'authors': [
-        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nuevo autor', type: 'action', position: 'left' },
+        { selector: '.fi-ac-btn-action, a[href*="create"]', text: 'Agregar autor', type: 'action', position: 'left' },
+        { selector: '.fi-ta-search-field', text: 'Buscar autores', type: 'tip', position: 'bottom' },
+        { selector: '.fi-ta-row:first-child', text: 'Clic para editar perfil', type: 'tip', position: 'left' },
+        { selector: '.fi-sidebar-item.fi-active', text: 'Estás aquí', type: 'info', position: 'right' },
     ],
     'tags': [
-        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nueva etiqueta', type: 'action', position: 'left' },
+        { selector: '.fi-ac-btn-action, a[href*="create"]', text: 'Crear etiqueta', type: 'action', position: 'left' },
+        { selector: '.fi-ta-search-field', text: 'Buscar etiquetas', type: 'tip', position: 'bottom' },
+        { selector: '.fi-ta-row:first-child', text: 'Clic para editar', type: 'tip', position: 'left' },
+        { selector: '.fi-sidebar-item.fi-active', text: 'Estás aquí', type: 'info', position: 'right' },
     ]
 };
 
