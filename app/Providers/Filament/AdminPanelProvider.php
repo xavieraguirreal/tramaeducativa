@@ -32,7 +32,6 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->viteTheme('resources/css/app.css')
             ->renderHook(
                 'panels::body.end',
                 fn () => Blade::render('@vite("resources/js/filament-help.js")')
