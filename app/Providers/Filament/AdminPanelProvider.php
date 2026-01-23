@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop(false)
             ->renderHook(
                 'panels::body.end',
                 fn () => Blade::render('@vite("resources/js/filament-help.js")')

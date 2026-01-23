@@ -189,22 +189,23 @@ const tours = {
 // Tips estáticos por página
 const tips = {
     'dashboard': [
-        { selector: 'nav[aria-label="Sidebar"]', text: 'Menú principal de navegación', type: 'info' },
-        { selector: '[href*="articles"]', text: 'Gestión de artículos', type: 'info' },
+        { selector: '.fi-sidebar-nav', text: 'Menú de navegación', type: 'info', position: 'right' },
+        { selector: '.fi-avatar', text: 'Tu perfil de usuario', type: 'info', position: 'bottom' },
     ],
     'articles': [
-        { selector: '[wire\\:click*="create"], a[href*="create"]', text: 'Crear nuevo artículo', type: 'action' },
-        { selector: 'input[type="search"], input[placeholder*="Buscar"]', text: 'Buscar por título o contenido', type: 'tip' },
-        { selector: 'th', text: 'Clic para ordenar', type: 'tip' },
+        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Crear nuevo artículo', type: 'action', position: 'left' },
+        { selector: '.fi-ta-search-field input, input[placeholder*="Buscar"], .fi-input', text: 'Buscar por título', type: 'tip', position: 'bottom' },
+        { selector: '.fi-ta-header-cell:first-child', text: 'Ordenar columnas', type: 'tip', position: 'bottom' },
+        { selector: '.fi-sidebar-item.fi-active', text: 'Sección actual', type: 'info', position: 'right' },
     ],
     'categories': [
-        { selector: '[wire\\:click*="create"], a[href*="create"]', text: 'Crear nueva categoría', type: 'action' },
+        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nueva categoría', type: 'action', position: 'left' },
     ],
     'authors': [
-        { selector: '[wire\\:click*="create"], a[href*="create"]', text: 'Agregar nuevo autor', type: 'action' },
+        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nuevo autor', type: 'action', position: 'left' },
     ],
     'tags': [
-        { selector: '[wire\\:click*="create"], a[href*="create"]', text: 'Crear nueva etiqueta', type: 'action' },
+        { selector: '.fi-btn-create, a[href*="create"], .fi-ac-btn-action', text: 'Nueva etiqueta', type: 'action', position: 'left' },
     ]
 };
 
@@ -286,19 +287,65 @@ function showTips() {
             <span class="trama-tip-text">${tip.text}</span>
         `;
         tooltip.style.cssText = `
-            position: absolute;
+            position: fixed;
             z-index: 9999;
             animation: tramaTipFadeIn 0.3s ease-out;
             animation-delay: ${index * 0.1}s;
             animation-fill-mode: both;
+            max-width: 200px;
+            white-space: nowrap;
         `;
 
-        // Posicionar tooltip
-        const rect = element.getBoundingClientRect();
-        tooltip.style.top = `${rect.top + window.scrollY - 10}px`;
-        tooltip.style.left = `${rect.right + window.scrollX + 10}px`;
-
         document.body.appendChild(tooltip);
+
+        // Posicionar tooltip según la posición especificada
+        const rect = element.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        const position = tip.position || 'right';
+        const padding = 8;
+
+        let top, left;
+
+        switch (position) {
+            case 'top':
+                top = rect.top - tooltipRect.height - padding;
+                left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                break;
+            case 'bottom':
+                top = rect.bottom + padding;
+                left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                break;
+            case 'left':
+                top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                left = rect.left - tooltipRect.width - padding;
+                break;
+            case 'right':
+            default:
+                top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+                left = rect.right + padding;
+                break;
+        }
+
+        // Ajustar si se sale de la pantalla
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        if (left + tooltipRect.width > viewportWidth - 10) {
+            left = rect.left - tooltipRect.width - padding;
+        }
+        if (left < 10) {
+            left = 10;
+        }
+        if (top + tooltipRect.height > viewportHeight - 10) {
+            top = viewportHeight - tooltipRect.height - 10;
+        }
+        if (top < 10) {
+            top = 10;
+        }
+
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
+
         tipElements.push(tooltip);
 
         // Resaltar elemento
