@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
+use App\Models\Tag;
+use App\Services\EmbeddingsService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -48,11 +51,46 @@ class ArticleResource extends Resource
                         Forms\Components\Textarea::make('excerpt')
                             ->label('Extracto')
                             ->rows(3)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->hintAction(
+                                Forms\Components\Actions\Action::make('generateExcerpt')
+                                    ->label('Generar con IA')
+                                    ->icon('heroicon-m-sparkles')
+                                    ->color('warning')
+                                    ->disabled(fn (Forms\Get $get): bool => empty(strip_tags($get('body') ?? '')))
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $body = $get('body');
+                                        if (empty(strip_tags($body ?? ''))) {
+                                            Notification::make()
+                                                ->title('Primero escribe el contenido del artículo')
+                                                ->warning()
+                                                ->send();
+                                            return;
+                                        }
+
+                                        try {
+                                            $service = new EmbeddingsService();
+                                            $excerpt = $service->generateExcerpt($body);
+                                            $set('excerpt', $excerpt);
+
+                                            Notification::make()
+                                                ->title('Extracto generado correctamente')
+                                                ->success()
+                                                ->send();
+                                        } catch (\Exception $e) {
+                                            Notification::make()
+                                                ->title('Error al generar extracto')
+                                                ->body($e->getMessage())
+                                                ->danger()
+                                                ->send();
+                                        }
+                                    })
+                            ),
 
                         Forms\Components\RichEditor::make('body')
                             ->label('Contenido')
                             ->required()
+                            ->live(onBlur: true)
                             ->toolbarButtons([
                                 'bold',
                                 'italic',
@@ -117,7 +155,58 @@ class ArticleResource extends Resource
                                     ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state))),
                                 Forms\Components\TextInput::make('slug')
                                     ->required(),
-                            ]),
+                            ])
+                            ->hintAction(
+                                Forms\Components\Actions\Action::make('suggestTags')
+                                    ->label('Sugerir con IA')
+                                    ->icon('heroicon-m-sparkles')
+                                    ->color('warning')
+                                    ->disabled(fn (Forms\Get $get): bool => empty(strip_tags($get('body') ?? '')))
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $body = $get('body');
+                                        $title = $get('title');
+
+                                        if (empty(strip_tags($body ?? ''))) {
+                                            Notification::make()
+                                                ->title('Primero escribe el contenido del artículo')
+                                                ->warning()
+                                                ->send();
+                                            return;
+                                        }
+
+                                        try {
+                                            $service = new EmbeddingsService();
+                                            $suggestedTags = $service->suggestTags($title . "\n\n" . $body);
+
+                                            // Buscar o crear tags
+                                            $tagIds = [];
+                                            foreach ($suggestedTags as $tagName) {
+                                                $tag = Tag::firstOrCreate(
+                                                    ['slug' => Str::slug($tagName)],
+                                                    ['name' => $tagName]
+                                                );
+                                                $tagIds[] = $tag->id;
+                                            }
+
+                                            // Combinar con tags existentes
+                                            $currentTags = $get('tags') ?? [];
+                                            $mergedTags = array_unique(array_merge($currentTags, $tagIds));
+                                            $set('tags', $mergedTags);
+
+                                            Notification::make()
+                                                ->title('Etiquetas sugeridas agregadas')
+                                                ->body('Se sugirieron ' . count($suggestedTags) . ' etiquetas')
+                                                ->success()
+                                                ->send();
+                                        } catch (\Exception $e) {
+                                            Notification::make()
+                                                ->title('Error al sugerir etiquetas')
+                                                ->body($e->getMessage())
+                                                ->danger()
+                                                ->send();
+                                        }
+                                    })
+                            ),
                     ])
                     ->columns(3),
 
@@ -150,7 +239,43 @@ class ArticleResource extends Resource
                             ->label('Puntos clave (generado por IA)')
                             ->rows(4)
                             ->columnSpanFull()
-                            ->helperText('Este campo se genera automáticamente. Puede editarlo si lo desea.'),
+                            ->helperText('Este campo se genera automáticamente. Puede editarlo si lo desea.')
+                            ->hintAction(
+                                Forms\Components\Actions\Action::make('generateAiSummary')
+                                    ->label('Generar con IA')
+                                    ->icon('heroicon-m-sparkles')
+                                    ->color('warning')
+                                    ->disabled(fn (Forms\Get $get): bool => empty(strip_tags($get('body') ?? '')))
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $body = $get('body');
+                                        $title = $get('title');
+
+                                        if (empty(strip_tags($body ?? ''))) {
+                                            Notification::make()
+                                                ->title('Primero escribe el contenido del artículo')
+                                                ->warning()
+                                                ->send();
+                                            return;
+                                        }
+
+                                        try {
+                                            $service = new EmbeddingsService();
+                                            $summary = $service->generateSummaryFromText($title . "\n\n" . $body);
+                                            $set('ai_summary', $summary);
+
+                                            Notification::make()
+                                                ->title('Resumen generado correctamente')
+                                                ->success()
+                                                ->send();
+                                        } catch (\Exception $e) {
+                                            Notification::make()
+                                                ->title('Error al generar resumen')
+                                                ->body($e->getMessage())
+                                                ->danger()
+                                                ->send();
+                                        }
+                                    })
+                            ),
                     ])
                     ->collapsed(),
             ]);
@@ -161,27 +286,33 @@ class ArticleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('featured_image')
-                    ->label('Imagen')
-                    ->circular(),
+                    ->label('Img')
+                    ->circular()
+                    ->size(40)
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
                     ->sortable()
-                    ->limit(50)
+                    ->limit(40)
+                    ->wrap()
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
-                        return strlen($state) > 50 ? $state : null;
+                        return strlen($state) > 40 ? $state : null;
                     }),
 
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Categoría')
                     ->badge()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('author.name')
                     ->label('Autor')
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(15)
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
@@ -200,18 +331,21 @@ class ArticleResource extends Resource
                     }),
 
                 Tables\Columns\IconColumn::make('is_featured')
-                    ->label('Destacado')
-                    ->boolean(),
+                    ->label('Dest.')
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('views')
                     ->label('Vistas')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('published_at')
-                    ->label('Publicado')
-                    ->dateTime('d/m/Y H:i')
-                    ->sortable(),
+                    ->label('Fecha')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Actualizado')
@@ -219,6 +353,7 @@ class ArticleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->striped()
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

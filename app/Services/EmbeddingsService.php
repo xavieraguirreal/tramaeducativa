@@ -241,6 +241,114 @@ class EmbeddingsService
     }
 
     /**
+     * Genera resumen IA a partir de texto (sin necesidad de Article)
+     */
+    public function generateSummaryFromText(string $content, int $maxPoints = 4): string
+    {
+        $text = $this->prepareText($content);
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Content-Type' => 'application/json',
+        ])->timeout(60)->post($this->baseUrl . '/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => "Eres un editor de noticias educativas. Genera un resumen en bullet points (máximo {$maxPoints} puntos) del artículo. Cada punto debe ser conciso (máximo 15 palabras). Responde SOLO con los bullet points, sin introducción. Usa el formato: • Punto 1\n• Punto 2"
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $text
+                ]
+            ],
+            'max_tokens' => 300,
+            'temperature' => 0.3,
+        ]);
+
+        if (!$response->successful()) {
+            throw new Exception("Error OpenAI Chat: " . $response->body());
+        }
+
+        $result = $response->json();
+        return trim($result['choices'][0]['message']['content'] ?? '');
+    }
+
+    /**
+     * Genera extracto/resumen corto a partir del contenido
+     */
+    public function generateExcerpt(string $content, int $maxWords = 50): string
+    {
+        $text = $this->prepareText($content);
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Content-Type' => 'application/json',
+        ])->timeout(60)->post($this->baseUrl . '/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => "Eres un editor de noticias. Genera un extracto/resumen muy breve (máximo {$maxWords} palabras) del siguiente texto. El extracto debe ser atractivo y resumir la idea principal. Responde SOLO con el extracto, sin comillas ni introducción."
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $text
+                ]
+            ],
+            'max_tokens' => 150,
+            'temperature' => 0.3,
+        ]);
+
+        if (!$response->successful()) {
+            throw new Exception("Error OpenAI Chat: " . $response->body());
+        }
+
+        $result = $response->json();
+        return trim($result['choices'][0]['message']['content'] ?? '');
+    }
+
+    /**
+     * Sugiere etiquetas a partir del contenido
+     */
+    public function suggestTags(string $content, int $maxTags = 5): array
+    {
+        $text = $this->prepareText($content);
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Content-Type' => 'application/json',
+        ])->timeout(60)->post($this->baseUrl . '/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => "Eres un editor de noticias educativas. Sugiere {$maxTags} etiquetas/tags relevantes para el siguiente artículo. Las etiquetas deben ser palabras clave cortas (1-3 palabras cada una), relevantes para el contenido educativo. Responde SOLO con las etiquetas separadas por comas, sin números ni explicaciones. Ejemplo: educación, tecnología, docentes"
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $text
+                ]
+            ],
+            'max_tokens' => 100,
+            'temperature' => 0.3,
+        ]);
+
+        if (!$response->successful()) {
+            throw new Exception("Error OpenAI Chat: " . $response->body());
+        }
+
+        $result = $response->json();
+        $tagsString = trim($result['choices'][0]['message']['content'] ?? '');
+
+        // Convertir string de tags a array
+        $tags = array_map('trim', explode(',', $tagsString));
+        $tags = array_filter($tags); // Eliminar vacíos
+
+        return $tags;
+    }
+
+    /**
      * Prepara el texto del articulo para embedding
      */
     protected function prepareArticleText(Article $article): string
